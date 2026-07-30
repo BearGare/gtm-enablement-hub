@@ -14,7 +14,7 @@ The control plane is the hosted management tier of the Relay platform. It owns t
 
 ## Responsibilities
 - **API gateway & UI** — serves the web console and exposes a versioned REST + GraphQL API for programmatic access.
-- **Pipeline orchestrator** — resolves DAG dependencies, schedules stages, and delegates execution to edge agents.
+- **Pipeline orchestrator** — resolves DAG dependencies, schedules stages, and routes execution to edge runners.
 - **Policy evaluation** — runs OPA-based governance checks (approval gates, environment restrictions, cost guardrails) before any deployment proceeds.
 - **Tenant isolation** — each organisation's data is logically separated with row-level access control and encrypted at rest.
 
@@ -57,11 +57,11 @@ Keeps credentials and workloads inside the customer's trust boundary. The contro
     id: "arch-knowledge-graph",
     e: "🕸️",
     c: TL,
-    title: "Knowledge Graph",
-    short: "A live dependency map connecting services, repositories, pipelines, environments, and owners — powering impact analysis and intelligent routing.",
-    d: `## Knowledge Graph
+    title: "Delivery Graph",
+    short: "A live map connecting services, repositories, pipelines, environments, owners, incidents, and cost — powering impact analysis and intelligent routing.",
+    d: `## Delivery Graph
 
-The knowledge graph is a continuously updated model of how software assets relate to each other across the organisation.
+The Delivery Graph is a continuously updated model of how software assets relate to each other across the organisation.
 
 ## What it maps
 - **Code → Build → Deploy → Runtime:** traces every service from its Git repo through CI pipelines to the clusters and cloud accounts where it runs.
@@ -74,7 +74,7 @@ Ingests events from Git webhooks, CI/CD pipeline telemetry, Kubernetes watchers,
 ## Use cases
 - **Impact analysis:** "Which teams are affected if we deprecate this shared library?"
 - **Change risk scoring:** A pipeline deploying a service with many dependents gets a higher risk score and may trigger additional approval gates.
-- **Cost attribution:** Links runtime cloud spend back through the graph to the owning team and the originating repository.`,
+- **Cost attribution:** Links runtime cloud spend back through the Delivery Graph to the owning team and the originating repository.`,
     sections: [
       { title: "🗄️ Storage", content: "Property graph database optimised for traversal queries. Queryable via the Relay API and the console's visual explorer." },
       { title: "🔄 Freshness", content: "Event-driven ingestion with sub-minute latency. Full reconciliation sweep runs hourly to catch any missed events." },
@@ -95,7 +95,7 @@ Policies are written in Rego (OPA's policy language) or a simplified YAML DSL fo
 
 ## Evaluation points
 - **Pre-deployment:** block a release if the container image has critical CVEs, the target environment is frozen, or the change exceeds a cost threshold.
-- **Pre-merge:** require specific approvers based on the files changed or the blast radius calculated by the knowledge graph.
+- **Pre-merge:** require specific approvers based on the files changed or the blast radius calculated by the Delivery Graph.
 - **Runtime:** continuously evaluate running workloads against drift policies and flag violations.
 
 ## Governance without bottlenecks

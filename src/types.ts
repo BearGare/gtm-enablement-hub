@@ -31,9 +31,14 @@ export type Item = {
   sections?: ItemSection[];
   pillar?: string;
   subModules?: Item[];
-  loop?: string;
   st?: string;
   mods?: string[];
+  /** Guiding question for SDLC stages (value-stream framing). */
+  question?: string;
+  /** Wait states / rework / handoffs reps listen for. */
+  friction?: string[];
+  /** Flow metrics associated with this stage. */
+  metrics?: string[];
 };
 
 /** Public observation vs GTM hypothesis — used on account briefs. */

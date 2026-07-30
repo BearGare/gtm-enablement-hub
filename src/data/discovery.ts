@@ -3,13 +3,13 @@ export const DISC: { title: string; qs: { q: string; why: string; fu: string }[]
 
   {title:"🚀 Deployment & reliability",qs:[
     {q:"How often do you deploy to production, and what still requires a human coordinator on the critical path?",
-     why:"Surfaces frequency vs fear. High frequency with manual babysitting → Relay Deploy/Verify. Low frequency often means risk avoidance — also a Deploy story.",
+     why:"Surfaces frequency vs fear. High frequency with manual babysitting → Relay CD / release verification. Low frequency often means risk avoidance — also a Relay CD story.",
      fu:"What is the most painful step between 'merged' and 'known-good in production'?"},
     {q:"When a bad deployment lands, how do you detect it — and what does rollback look like in practice?",
-     why:"Maps to continuous verification and automated rollback. Slack-noticed regressions and manual reverts are the wedge.",
+     why:"Maps to release verification and automated rollback in Relay CD. Slack-noticed regressions and manual reverts are the wedge.",
      fu:"How long from first symptom to a stable rollback or forward fix?"},
     {q:"How many people are typically involved in coordinating a non-trivial release?",
-     why:"Quantifies release-orchestration toil. Spreadsheets and multi-team sign-offs justify standardisation on Relay Deploy.",
+     why:"Quantifies release-orchestration toil. Spreadsheets and multi-team sign-offs justify standardisation on Relay CD.",
      fu:"Is there a dedicated release owner, or does it fall on each squad ad hoc?"},
   ]},
 
@@ -30,7 +30,7 @@ export const DISC: { title: string; qs: { q: string; why: string; fu: string }[]
      why:"Most orgs track seat usage, not delivery outcomes. Opens Relay Insights and the need for Deploy-level telemetry.",
      fu:"When AI-assisted changes fail in production, what does the incident look like compared to other changes?"},
     {q:"As AI increases PR volume, what is happening to code-review latency and reviewer burnout on your teams?",
-     why:"Connects inner-loop speed to outer-loop bottlenecks. Relay Code standards + CI signal quality + Insights.",
+     why:"Connects coding velocity to bottlenecks downstream in the delivery stream. Relay Code standards + CI signal quality + Insights.",
      fu:"Which review costs are invisible in your current productivity dashboards?"},
     {q:"Between commit and production, how many manual handoffs remain — and which of those did AI tooling not accelerate at all?",
      why:"Frames the velocity gap: AI speeds coding; Relay targets the remaining delivery chain.",
@@ -66,7 +66,7 @@ export const DISC: { title: string; qs: { q: string; why: string; fu: string }[]
      why:"North-star DX metric. Long tails justify Portal golden paths and clearer Plan→Deploy linkage.",
      fu:"What are the top three papercuts in that journey?"},
     {q:"How many distinct systems must a developer touch to take a story from backlog to production?",
-     why:"Cognitive-load framing for Relay Plan + Code + CI + Deploy cohesion.",
+     why:"Cognitive-load framing for Relay Plans + Code + CI + CD cohesion.",
      fu:"Which hop is most likely to stall a release?"},
     {q:"Do you run developer scorecards — and can teams remediate failing checks with a self-service action?",
      why:"Scorecards without fix buttons breed resentment. Portal actions + Secure/Deploy defaults.",
@@ -75,7 +75,7 @@ export const DISC: { title: string; qs: { q: string; why: string; fu: string }[]
 
   {title:"📡 Observability & change intelligence",qs:[
     {q:"When an incident fires, how quickly can responders answer 'what changed?' with confidence?",
-     why:"Change intelligence across deploys, config, and flags. Relay Observe/Verify adjacent to existing APM/log stacks — complementary positioning.",
+     why:"Change intelligence across deploys, config, and flags. Relay SRE / Relay CD adjacent to existing APM/log stacks — complementary positioning.",
      fu:"What percentage of MTTR is investigation versus actual fix?"},
     {q:"Which signals decide that a canary or progressive deploy is healthy enough to continue?",
      why:"Concrete Verify design input: metrics, logs, traces, synthetic checks.",

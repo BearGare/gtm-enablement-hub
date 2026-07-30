@@ -6,13 +6,9 @@ cp .env.local.example .env.local   # Anthropic (+ Turso/Voyage for RAG)
 npm run dev                        # http://localhost:5173
 ```
 
-### Checks
+Checks: `npm run check:naming`, `npm run check:glossary`, `npm run check:sensitive`, `npm run build`.
 
-```bash
-npm run check:glossary
-npm run check:sensitive
-npm run build
-```
+Canonical product names: [`docs/NAMING.md`](NAMING.md).
 
 ### Where to edit
 

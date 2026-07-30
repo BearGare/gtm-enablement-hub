@@ -35,6 +35,15 @@ const HIGH: { name: string; re: RegExp }[] = [
   { name: 'HLUs packaging', re: /\bHLUs?\b/ },
   { name: 'Traceable product', re: /\bTraceable\b/ },
   { name: 'old localStorage prefix', re: /\bhHub/ },
+  { name: 'Jyoti Bansal', re: /\bJyoti Bansal\b/ },
+  { name: 'Test Intelligence', re: /\bTest Intelligence\b/ },
+  { name: 'AutoStopping', re: /\bAutoStopping\b/ },
+  { name: 'AI Scribe', re: /\bAI Scribe\b/ },
+  { name: 'Continuous Verification', re: /\bContinuous Verification\b/ },
+  { name: 'AIDA', re: /\bAIDA\b/ },
+  { name: 'Trellis Score', re: /\bTrellis Score\b/ },
+  { name: 'ChaosGuard', re: /\bChaosGuard\b/ },
+  { name: 'Gitspaces', re: /\bGitspaces\b/ },
 ]
 
 const ALLOW_FILES = new Set<string>([])

@@ -403,16 +403,17 @@ export default function App(){
 
   // seeAlso navigation helpers
   const MOD_NAME_TO_ID:Record<string,string>={
-    "plans":"plans","ci":"code","build":"build","secure":"secure","deploy":"deploy",
-    "flags":"flags","portal":"portal","infra":"infra","sre":"sre","cost":"cost",
-    "insights":"insights","supply":"supply","relay plans":"plans","relay ci":"code",
-    "relay build":"build","relay secure":"secure","relay deploy":"deploy","relay flags":"flags",
-    "relay portal":"portal","relay infra":"infra","relay sre":"sre","relay cost":"cost",
-    "relay insights":"insights","relay supply":"supply",
+    "plans":"plans","code":"code","portal":"portal","ci":"ci","test":"test","cd":"cd",
+    "flags":"flags","infra":"infra","data":"data","secure":"secure","supply":"supply",
+    "sre":"sre","cost":"cost","insights":"insights",
+    "relay plans":"plans","relay code":"code","relay portal":"portal","relay ci":"ci",
+    "relay test":"test","relay cd":"cd","relay flags":"flags","relay infra":"infra",
+    "relay data":"data","relay secure":"secure","relay supply":"supply","relay sre":"sre",
+    "relay cost":"cost","relay insights":"insights",
   };
   // Tab indices for new IA (must match TABS order below)
   const STAB_MAP:{[k:string]:number}={sdlc:2,architecture:1,solutions:1,personas:3,competitive:5,discovery:7,glossary:8,calls:9,methodology:10,progress:11,settings:12,accounts:4,outbound:6};
-  const STAGE_IDS=new Set(["plan","code","build","secure","deploy","observe","optimise"]);
+  const STAGE_IDS=new Set(["plan","code","build","test","secure","release","operate","improve"]);
 
   const openModByName=(name:string)=>{
     const id=MOD_NAME_TO_ID[name.toLowerCase()];
@@ -542,16 +543,16 @@ export default function App(){
       const mode=chat.topic.mode||"module";
       const userCtx=userName?`\n\nRep context: ${userName}${userRole?` (${userRole})`:""}. Tailor your coaching to their role and experience level.`:"";
       const styleNote=coachStyle==="direct"?"\n\nCOACHING STYLE: Be concise and direct. Skip lengthy Socratic sequences — give your feedback or key point in 2–3 sentences, then ask at most one focused question. Use bullet points for lists. No preamble.":"";
-      const nameGuard=`\n\nRELAY MODULE NAMING — use canonical Relay module names and never invent expansions. Examples: "Relay Deploy" not "Relay CD", "Relay Insights" not "Relay SEI". Module names: ${MODS.map(m=>m.title).join(", ")}. If unsure, use the short label rather than inventing a name.`;
+      const nameGuard=`\n\nRELAY MODULE NAMING — use only the canonical module titles from the platform module list below. Never invent expansions or legacy aliases (for example do not say SEI, IaCM, AST, or WAAP as Relay product names). Prefer Relay CI / Relay CD / Relay Test / Relay Insights / Relay Cost / Relay SRE / Relay Supply / Relay Infra. Module names: ${MODS.map(m=>m.title).join(", ")}.`;
       const repKnowledge=progSummary();
       const repCtx=repKnowledge
         ?`\n\nRep's current module knowledge — calibrate difficulty to this:\n${repKnowledge}\n\nFor mastered topics (where a reflection is shown), probe deeper than their stated mental model. For practiced topics, test whether they can apply what they know in this context. Only reference modules listed above — don't introduce Relay capabilities the rep hasn't covered yet.`
         :`\n\nThe rep is new to the product — keep the scenario accessible. Don't reference specific Relay modules or capabilities they haven't mentioned themselves. Focus on surfacing this persona's pain points and letting the rep find natural entry points.`;
       const platformCtx=`Key Relay platform context:
-- Relay is a full-SDLC delivery platform for engineering organisations. It spans both inner loop (Plan, Code) and outer loop (Build, Secure, Deploy, Observe, Optimise).
-- The core thesis: AI coding tools accelerate the inner loop, but 60-70% of engineering time is in the outer loop — Relay closes that gap.
+- Relay is a full-SDLC delivery platform for engineering organisations. It covers one continuous value stream: Plan → Code → Build → Test → Secure → Release → Operate → Improve.
+- The core thesis: Relay can cover the whole stream, but GTM conversations start where work is waiting — find the constraint, then expand.
 - Platform modules: ${MODS.map(m=>`${m.title} (${m.short})`).join("; ")}
-- Chimera AI: Relay's unified AI backbone powering code assistance, deployment intelligence, incident correlation, and cost anomaly detection.
+- Relay AI: unified intelligence layer (Delivery Graph + agents Pilot, Conductor, Prover, Medic) powering code assistance, release intelligence, test selection, and incident correlation.
 - Relay is not a monitoring vendor, not a point CI tool, not a cloud cost dashboard — it is the control plane from roadmap to production.`;
       const masterySignal=`
 
@@ -788,9 +789,9 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
   };
 
   const MOD_LABELS:Record<string,string>={
-    plans:"PLANS",code:"CI",build:"BUILD",secure:"SECURE",deploy:"DEPLOY",
-    flags:"FLAGS",portal:"PORTAL",infra:"INFRA",sre:"SRE",cost:"COST",
-    insights:"INSIGHTS",supply:"SUPPLY",
+    plans:"PLANS",code:"CODE",portal:"PORTAL",ci:"CI",test:"TEST",cd:"CD",
+    flags:"FLAGS",infra:"INFRA",data:"DATA",secure:"SECURE",supply:"SUPPLY",
+    sre:"SRE",cost:"COST",insights:"INSIGHTS",
   };
   const ALL_MOD_CHIPS=MODS.map(m=>({label:MOD_LABELS[m.id]||m.title||m.id,e:m.e||""}));
 
@@ -920,7 +921,7 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
     const stageName=stage.st||stage.title||stage.id;
     const angle=account.outboundAngles[0]||`${stageName} challenges in engineering orgs like ${account.title}`;
     const role=persona.role||persona.title||"";
-    const mods=account.moduleFit.slice(0,2).join(" and ")||"Relay Deploy";
+    const mods=account.moduleFit.slice(0,2).join(" and ")||"Relay CD";
     const hyp=(account.hypotheses[0]?.text||"").replace(/^Hypothesis:\s*/i,"");
     const signalHook=signal.split(".")[0]?.trim()||`Public materials suggest ${account.title} continues to invest in engineering platforms`;
 
@@ -1098,7 +1099,7 @@ ${obOutput.call}`;
               <div style={{fontWeight:700,fontSize:13,color:A,marginBottom:10}}>📋 Suggested path — 4 steps</div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {[
-                  {n:"1",t:"Start with the SDLC map","d":"Walk the inner/outer loop. See where AI coding acceleration creates the outer-loop bottleneck — and where Relay fits."},
+                  {n:"1",t:"Start with the SDLC map","d":"Walk the value stream. Find where work waits — that stage is the wedge, and Relay already covers the rest when they are ready."},
                   {n:"2",t:"Open an account brief","d":"Pick Stripe, Shopify, or Cloudflare. Separate public signals from labelled hypotheses before you build a play."},
                   {n:"3",t:"Generate outbound in the Lab","d":"Outbound tab → pick account, persona, SDLC stage, tone → Generate Openers. Review AI Coach Notes (optional: Polish with AI)."},
                   {n:"4",t:"Practise on a call transcript","d":"Calls tab → Load sample transcript → Analyse Call. Review fit rating, pain points, and module alignment."},
@@ -1132,7 +1133,7 @@ ${obOutput.call}`;
         {/* ── tab 1: Solutions ─────────────────────────────────────────── */}
         {tab===1&&(
           <div>
-            <Hdr title="The Relay Platform — Solutions" accent="Solutions" sub="Four value pillars powered by Chimera AI. Click any module to explore."/>
+            <Hdr title="The Relay Platform — Solutions" accent="Solutions" sub="Four value pillars powered by Relay AI. Click any module to explore."/>
             {/* Four pillar columns */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:_compact?6:10,marginBottom:_compact?8:14}}>
               {PILLARS.map(pil=>{
@@ -1172,9 +1173,9 @@ ${obOutput.call}`;
                 );
               })}
             </div>
-            {/* Chimera AI section */}
+            {/* Relay AI section */}
             {(()=>{
-              const [chimera,ctxGraph,guardrails]=RELAY_AI.platform;
+              const [relayAi,deliveryGraph,guardrails]=RELAY_AI.platform;
               const openItem=(item:Item)=>{setModal(item);save({...prog,[item.id]:{...(prog[item.id]||{}),visited:true,lastVisit:Date.now()}});};
               const aiCard=(item:Item,mx:string,borderC:string,bgTint:string,extra?:React.ReactNode)=>(
                 <div key={item.id} style={{margin:`0 ${mx}`,marginBottom:8,background:CD,border:`1px solid ${borderC}`,borderRadius:10,cursor:"pointer",transition:"all .15s"}}
@@ -1193,8 +1194,8 @@ ${obOutput.call}`;
               return(
                 <div style={{marginBottom:14}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
-                    <span style={{fontSize:10,fontWeight:800,color:A,letterSpacing:1.4,background:A+"22",padding:"3px 8px",borderRadius:4,flexShrink:0}}>CHIMERA AI</span>
-                    <span style={{fontSize:12,color:MU,flex:1}}>Relay's unified AI backbone — cross-domain intelligence from code to production, not bolted-on copilots.</span>
+                    <span style={{fontSize:10,fontWeight:800,color:A,letterSpacing:1.4,background:A+"22",padding:"3px 8px",borderRadius:4,flexShrink:0}}>RELAY AI</span>
+                    <span style={{fontSize:12,color:MU,flex:1}}>Unified intelligence across the delivery stream — Delivery Graph context, not bolted-on copilots.</span>
                     <div onClick={()=>openItem(guardrails)}
                       style={{display:"flex",alignItems:"center",gap:5,background:ER+"18",border:`1px solid ${ER}44`,borderRadius:5,padding:"3px 9px",cursor:"pointer",flexShrink:0,transition:"all .15s"}}
                       onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.borderColor=ER+"99";}}
@@ -1203,8 +1204,8 @@ ${obOutput.call}`;
                       <span style={{fontSize:10,fontWeight:700,color:ER}}>AI Guardrails →</span>
                     </div>
                   </div>
-                  {aiCard(chimera,"0",A+"33",A+"08")}
-                  {aiCard(ctxGraph,"-6px",A+"55",A+"0c")}
+                  {aiCard(relayAi,"0",A+"33",A+"08")}
+                  {aiCard(deliveryGraph,"-6px",A+"55",A+"0c")}
                   {aiCard(guardrails,"-12px",A+"77",A+"11",
                     <div>
                       <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10,justifyContent:"center"}}>
@@ -1261,10 +1262,8 @@ ${obOutput.call}`;
 
         {/* ── tab 2: SDLC ──────────────────────────────────────────────── */}
         {tab===2&&(()=>{
-          const INNER=SDLC_STAGES.filter(s=>s.loop==="inner");
-          const OUTER=SDLC_STAGES.filter(s=>s.loop==="outer");
           const active=SDLC_STAGES.find(s=>s.id===sdlcActive)||null;
-          const STAGE_ORDER=["plan","code","build","secure","deploy","observe","optimise"];
+          const STAGE_ORDER=["plan","code","build","test","secure","release","operate","improve"];
           const activeIdx=active?STAGE_ORDER.indexOf(active.id):-1;
           const prevStage=activeIdx>0?SDLC_STAGES.find(s=>s.id===STAGE_ORDER[activeIdx-1])||null:null;
           const nextStage=activeIdx>=0&&activeIdx<STAGE_ORDER.length-1?SDLC_STAGES.find(s=>s.id===STAGE_ORDER[activeIdx+1])||null:null;
@@ -1272,40 +1271,38 @@ ${obOutput.call}`;
             const on=sdlcActive===s.id;
             return(
               <div onClick={()=>setSdlcActive(on?null:s.id)}
-                style={{flex:1,minWidth:0,background:on?s.c+"22":"transparent",border:`2px solid ${on?s.c:"transparent"}`,borderRadius:8,padding:"10px 6px",cursor:"pointer",textAlign:"center",transition:"all .15s",userSelect:"none"}}>
-                <div style={{fontSize:22}}>{s.e}</div>
+                style={{flex:1,minWidth:0,background:on?s.c+"22":"transparent",border:`2px solid ${on?s.c:"transparent"}`,borderRadius:8,padding:"10px 4px",cursor:"pointer",textAlign:"center",transition:"all .15s",userSelect:"none"}}>
+                <div style={{fontSize:20}}>{s.e}</div>
                 <div style={{fontSize:11,fontWeight:700,color:on?s.c:TX,marginTop:3,lineHeight:1.2}}>{s.st}</div>
-                <div style={{fontSize:10,color:MU,marginTop:2,lineHeight:1.3}}>{s.short}</div>
+                <div style={{fontSize:9,color:MU,marginTop:2,lineHeight:1.3,display:uiDensity==="compact"?"none":"block"}}>{s.question}</div>
               </div>
             );
           };
           return(
             <div>
-              <Hdr title="SDLC Explorer" accent="Explorer" sub="Inner loop (Plan + Code) is where developers work. Outer loop (Build → Optimise) is where Relay lives. Click any stage to explore."/>
+              <Hdr title="SDLC Explorer" accent="Explorer" sub="One continuous value stream. Find where work waits — start there. Click any stage to explore."/>
               <div style={{background:A+"09",border:`1px solid ${A}22`,borderRadius:10,padding:"14px 16px",marginBottom:14}}>
                 <Md t={SDLC_INTRO}/>
               </div>
-              <div style={{display:"flex",borderRadius:10,overflow:"hidden",border:`1px solid ${BO}`,marginBottom:14}}>
-                <div style={{flex:2,background:A+"09",borderRight:`1px solid ${BO}`,padding:"12px 10px"}}>
-                  <div style={{fontSize:9,fontWeight:700,color:A,letterSpacing:1.2,marginBottom:2}}>↩ INNER LOOP</div>
-                  <div style={{fontSize:10,color:MU,marginBottom:10}}>Developer Focus · <strong style={{color:TX}}>30–40%</strong> of engineering time</div>
-                  <div style={{display:"flex",gap:4,alignItems:"center"}}>{INNER.map((s,i)=><React.Fragment key={s.id}><Node s={s}/>{i<INNER.length-1&&<span style={{fontSize:18,color:MU,fontFamily:"Arial",flexShrink:0}}>›</span>}</React.Fragment>)}</div>
-                </div>
-                <div style={{flex:4,background:SU+"06",padding:"12px 10px"}}>
-                  <div style={{fontSize:9,fontWeight:700,color:SU,letterSpacing:1.2,marginBottom:2}}>↩ OUTER LOOP · RELAY PLATFORM</div>
-                  <div style={{fontSize:10,color:MU,marginBottom:10}}>Software Delivery · <strong style={{color:TX}}>60–70%</strong> of engineering time</div>
-                  <div style={{display:"flex",gap:4,alignItems:"center"}}>{OUTER.map((s,i)=><React.Fragment key={s.id}><Node s={s}/>{i<OUTER.length-1&&<span style={{fontSize:18,color:MU,fontFamily:"Arial",flexShrink:0}}>›</span>}</React.Fragment>)}</div>
+              <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:"12px 10px",marginBottom:14}}>
+                <div style={{fontSize:9,fontWeight:700,color:A,letterSpacing:1.2,marginBottom:2}}>VALUE STREAM</div>
+                <div style={{fontSize:10,color:MU,marginBottom:10}}>Equal stages · start at the constraint · expand when ready</div>
+                <div style={{display:"flex",gap:3,alignItems:"center",overflowX:"auto"}}>
+                  {STAGE_ORDER.map((id,i)=>{
+                    const s=SDLC_STAGES.find(x=>x.id===id)!;
+                    return <React.Fragment key={id}><Node s={s}/>{i<STAGE_ORDER.length-1&&<span style={{fontSize:16,color:MU,fontFamily:"Arial",flexShrink:0}}>›</span>}</React.Fragment>;
+                  })}
                 </div>
               </div>
-              <Callout c={A} ch={<><strong style={{color:A}}>The Relay thesis in one insight:</strong> AI coding tools accelerate the inner loop. But 60–70% of engineering time is in the outer loop — and most of that is still manual, fragmented, and slow. That's the gap Relay closes.</>}/>
+              <Callout c={A} ch={<><strong style={{color:A}}>Constraint-first:</strong> Relay can cover the whole stream. The useful question is where a typical change loses the most calendar time — that stage is the wedge, and adjacent modules are already there when the team is ready.</>}/>
               {active&&(
                 <div style={{background:C2,border:`2px solid ${active.c}44`,borderRadius:10,padding:16,marginBottom:14,marginTop:4}}>
                   <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
                     <div style={{fontSize:28}}>{active.e}</div>
                     <div style={{flex:1}}>
-                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4,flexWrap:"wrap"}}>
                         <div style={{fontWeight:700,fontSize:16,color:active.c}}>{active.st}</div>
-                        <span style={{fontSize:9,fontWeight:700,color:active.loop==="inner"?A:SU,background:(active.loop==="inner"?A:SU)+"15",padding:"2px 7px",borderRadius:4,letterSpacing:.8}}>{active.loop==="inner"?"INNER LOOP":"OUTER LOOP"}</span>
+                        {active.question&&<span style={{fontSize:11,fontWeight:600,color:MU,fontStyle:"italic"}}>{active.question}</span>}
                       </div>
                       <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
                         {active.mods?.map((m,i)=><Chip key={i} l={m} c={active.c}/>)}
@@ -1377,18 +1374,18 @@ ${obOutput.call}`;
             {id:"all",label:"All"},
             {id:"featured",label:"⭐ Top"},
             {id:"platform",label:"Platform"},
-            {id:"cd",label:"CD & Deploy"},
+            {id:"cd",label:"CD & Release"},
             {id:"ci",label:"CI & Build"},
-            {id:"aisre",label:"AI SRE"},
+            {id:"sre",label:"SRE"},
             {id:"flags",label:"Feature Flags"},
             {id:"security",label:"Security"},
             {id:"ai",label:"AI Code"},
             {id:"idp",label:"Dev Portal"},
-            {id:"ar",label:"Artifact Registry"},
-            {id:"aidi",label:"Eng Intelligence"},
+            {id:"supply",label:"Supply / Artifacts"},
+            {id:"insights",label:"Eng Insights"},
             {id:"finops",label:"FinOps"},
-            {id:"iac",label:"IaCM"},
-            {id:"chaos",label:"Chaos Eng"},
+            {id:"iac",label:"Infra / IaC"},
+            {id:"chaos",label:"Reliability Exp."},
           ];
           const filteredComps=compFilter==="featured"?COMPS.filter(c=>c.featured):compFilter==="all"?COMPS:COMPS.filter(c=>c.cats?.includes(compFilter));
           return(

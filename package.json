@@ -10,7 +10,8 @@
     "seed": "tsx scripts/seed.ts",
     "seed:dry": "tsx scripts/seed.ts --dry-run",
     "check:glossary": "tsx scripts/check-glossary.ts",
-    "check:sensitive": "tsx scripts/check-sensitive.ts"
+    "check:sensitive": "tsx scripts/check-sensitive.ts",
+    "check:naming": "tsx scripts/check-naming.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",

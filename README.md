@@ -91,8 +91,8 @@ The coach now retrieves across the whole hub. Remove the keys and it falls back 
 | Tab | What it covers |
 |---|---|
 | Dashboard | Coverage overview + suggested path through the hub |
-| Solutions | Relay modules across the SDLC + Chimera AI |
-| SDLC | Thin inner loop (Plan / Code) vs outer loop (Build → Optimise) |
+| Solutions | Relay modules across the SDLC + Relay AI |
+| SDLC | Value stream: Plan → Code → Build → Test → Secure → Release → Operate → Improve |
 | Personas | Technical buyer enablement cards |
 | Accounts | Public-source account briefs (hypotheses labelled) |
 | Competitive | Landscape cards framed for Relay |
@@ -164,10 +164,13 @@ Account briefs use **public sources only**. Hypotheses must stay labelled as hyp
 ## Checks
 
 ```bash
+npm run check:naming
 npm run check:glossary
 npm run check:sensitive
 npm run build
 ```
+
+Canonical module and capability names live in [`docs/NAMING.md`](docs/NAMING.md).
 
 ---
 

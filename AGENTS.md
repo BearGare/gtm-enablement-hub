@@ -11,6 +11,7 @@ Startup update script runs `npm install`.
 - Without RAG keys, chat fails open to single-card coaching (expected)
 
 ### Checks
+- `npm run check:naming`
 - `npm run check:glossary`
 - `npm run check:sensitive`
 - `npm run build`
@@ -18,5 +19,6 @@ Startup update script runs `npm install`.
 
 ### Notes
 - Product docs live in root `README.md`, `ROADMAP.md`, `CHANGELOG.md`, `CLAUDE.md`
+- Canonical product names: `docs/NAMING.md`
 - Content edits go in `src/data/*`; UI/chat in `src/App.tsx`
 - localStorage prefix is `signalHub*`

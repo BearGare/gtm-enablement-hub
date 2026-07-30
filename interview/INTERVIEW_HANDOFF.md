@@ -27,9 +27,9 @@ npm run dev    # http://localhost:5173
 | Time | Tab | Say / show |
 |---|---|---|
 | 0:00 | **Dashboard** | “Market → account → play, structured.” Click **Explore SDLC Map**. |
-| 0:20 | **SDLC** | Inner loop (Plan/Code) vs outer (Build→Optimise). Open **Deploy** or **Code**. |
+| 0:20 | **SDLC** | Value stream Plan→Improve. Open **Release** or **Test**. Find the constraint. |
 | 1:20 | **Accounts** | e.g. Cloudflare — **public signals** vs **labelled hypotheses**. |
-| 2:00 | **Outbound** | Same account + VP Engineering + Deploy → **Generate Openers** + Coach Notes. |
+| 2:00 | **Outbound** | Same account + VP Engineering + Release → **Generate Openers** + Coach Notes. |
 | 2:50 | **Methodology** | Public research standards; judgment over invented intel. |
 
 Optional (+1 min): **Calls** → **Load sample transcript** → **Analyse Call**.
