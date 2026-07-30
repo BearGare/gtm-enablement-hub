@@ -1,6 +1,6 @@
 # Interview / presenter materials
 
-Optional walkthrough notes for presenting GTM Signal Hub in an interview or live walkthrough.
+Optional walkthrough notes for presenting GTM Enablement Hub in an interview or live walkthrough.
 
 These files are **not** part of the product documentation. The hub itself is documented in the repo root [`README.md`](../README.md).
 

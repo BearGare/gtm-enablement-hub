@@ -1,4 +1,4 @@
-# GTM Signal Hub — Roadmap
+# GTM Enablement Hub — Roadmap
 
 _Last updated: 30 July 2026._
 
@@ -15,16 +15,32 @@ The Turso + Voyage RAG coaching layer is in place (see [README](README.md#option
 ## Near term
 
 - [x] Canonical Relay naming (CI/CD, 14 modules) + value-stream SDLC reframe — see `docs/NAMING.md`
-- [ ] Richer public-source citations on account briefs (URL + date where possible)
-- [ ] Outbound pack export (clipboard / markdown)
+- [x] ~~Richer public-source citations on account briefs~~ — cancelled (Accounts tab removed)
+- [x] ~~Outbound pack export~~ — cancelled (Outbound Lab removed)
+- [ ] **Objection Gym** — new tab: objection cards by persona × theme; AI coach scores answers. Category-reframe drills live here.
+- [ ] **Discovery Paths** — fold into Discovery tab (Browse + Path modes); constraint-first branching, not a separate tab
+- [ ] **Land Planner** — new tab combining wedge finder + toolchain coexist/replace honesty + anti-boil-the-ocean proof ladder into one land brief
 - [ ] Dual-write progress / bookmarks / call history to Turso
-- [ ] Cross-links between personas, modules, accounts, and competitive cards
-- [ ] Discovery flow: branching tree beyond the flat question bank
+- [ ] Cross-links between personas, modules, and competitive cards
 - [ ] Mobile pass once the hub is in regular use
+
+---
+
+## Candidates (workshop)
+
+Idiosyncratic to selling a multi-module full-value-stream platform — not CRM / Gong / Sales Nav substitutes.
+
+| Idea | Notes |
+|---|---|
+| **Security Review Gauntlet** | Timed AppSec/architecture Q&A; can deep-link from Land Planner’s security proof variant |
+| **Champion → Executive Translator** | Technical win → VP/CIO narrative; pairs after a land brief exists |
+| **Multi-Stakeholder Room Sim** | Sec vs Dev vs FinOps interrupting; closer to Objection Gym’s interaction model |
+| **Budget-Owner Ambiguity Tree** | DevEx vs Infra vs Sec vs Eng Productivity — could later feed Land Planner inputs |
 
 ---
 
 ## Non-goals (for now)
 
 - Auth / multi-tenant production deployment (blocked on the persistence + auth decision above)
-- Treating public account briefs as customer intel — they remain teaching material with labelled hypotheses
+- Hard-coded named account briefs or one-click outbound drafting (removed — oversimplifies complex platform GTM)
+- Generic talk-track exporters, CRM-like stakeholder maps, or LMS learning-path clones unless tightly bound to Relay constraint/module logic

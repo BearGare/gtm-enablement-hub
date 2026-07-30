@@ -41,31 +41,6 @@ export type Item = {
   metrics?: string[];
 };
 
-/** Public observation vs GTM hypothesis — used on account briefs. */
-export type SignalKind = "public" | "hypothesis";
-
-export type AccountSignal = {
-  kind: SignalKind;
-  text: string;
-  source?: string;
-};
-
-export type Account = Item & {
-  id: string;
-  title: string;
-  industry: string;
-  publicSnapshot: string;
-  publicSignals: AccountSignal[];
-  hypotheses: AccountSignal[];
-  personas: string[];
-  pains: string[];
-  moduleFit: string[];
-  outboundAngles: string[];
-  qualQuestions: string[];
-  risks: string[];
-  nextAction: string;
-};
-
 export type Message = { role: "user" | "assistant"; content: string };
 
 export type ProgMap = Record<string, {
@@ -79,6 +54,3 @@ export type ProgMap = Record<string, {
 
 export type GlossaryTerm = { term: string; def: string; seeAlso?: string };
 export type GlossaryCategory = { id: string; title: string; emoji: string; terms: GlossaryTerm[] };
-
-export type OutboundTone = "curious" | "direct" | "peer";
-export type OutboundChannel = "email" | "linkedin" | "call";

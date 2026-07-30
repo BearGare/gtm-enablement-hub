@@ -1,6 +1,6 @@
 # Relay naming guide
 
-Canonical product names for GTM Signal Hub. All content, UI copy, coaching prompts, and competitive cards must use these names. `npm run check:naming` enforces the forbidden list.
+Canonical product names for GTM Enablement Hub. All content, UI copy, coaching prompts, and competitive cards must use these names. `npm run check:naming` enforces the forbidden list.
 
 ## Pillars
 

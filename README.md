@@ -1,6 +1,6 @@
-# GTM Signal Hub
+# GTM Enablement Hub
 
-A sales enablement hub for the **Relay** GTM organisation. Relay is a fictional full-SDLC delivery platform — think AI-assisted coding, planning, and delivery tooling under one roof. The hub gives SDRs, AEs, and GTM teammates an interactive way to learn and practise on Relay modules, the software delivery lifecycle, buyer personas, account briefs, competitive positioning, discovery questions, outbound plays, and call analysis.
+A sales enablement hub for the **Relay** GTM organisation. Relay is a fictional full-SDLC delivery platform — think AI-assisted coding, planning, and delivery tooling under one roof. The hub gives SDRs, AEs, and GTM teammates an interactive way to learn and practise on Relay modules, the software delivery lifecycle, buyer personas, competitive positioning, discovery questions, and call analysis.
 
 The AI coaching chat (powered by Anthropic Claude) lets users deep-dive on any topic via Socratic coaching — explain it, get challenged, and build confidence before a real customer conversation.
 
@@ -94,14 +94,11 @@ The coach now retrieves across the whole hub. Remove the keys and it falls back 
 | Solutions | Relay modules across the SDLC + Relay AI |
 | SDLC | Value stream: Plan → Code → Build → Test → Secure → Release → Operate → Improve |
 | Personas | Technical buyer enablement cards |
-| Accounts | Public-source account briefs (hypotheses labelled) |
 | Competitive | Landscape cards framed for Relay |
-| Outbound | Messaging lab — templates + optional AI polish |
 | Discovery | Question banks with rationale |
 | Glossary | Industry + Relay terms with auto-link |
 | Calls | Paste a transcript → structured analysis |
-| Methodology | How account research and hypotheses are handled |
-| Progress / Settings | Practice tiers + preferences |
+| Progress / Settings | Practice tiers + preferences; About this hub (research standards) under Settings |
 
 ---
 
@@ -132,7 +129,7 @@ Browser  →  POST /api/chat  →  Vite middleware (dev) / Node.js serverless (p
 | Path | Purpose |
 |---|---|
 | `src/App.tsx` | UI components, state management, and chat logic |
-| `src/data/*` | All GTM content — modules, personas, accounts, battlecards, discovery, glossary, SDLC |
+| `src/data/*` | All GTM content — modules, personas, battlecards, discovery, glossary, SDLC |
 | `src/types.ts` | TypeScript type definitions |
 | `src/colors.ts` | Brand colour palette constants |
 | `api/chat.ts` | Node.js serverless function — Anthropic API proxy + RAG pipeline |
@@ -153,11 +150,11 @@ Browser  →  POST /api/chat  →  Vite middleware (dev) / Node.js serverless (p
 
 All GTM content lives in `src/data/*` as TypeScript data modules. The workflow:
 
-1. Edit the relevant file under `src/data/` (modules, personas, accounts, comps, etc.)
+1. Edit the relevant file under `src/data/` (modules, personas, comps, etc.)
 2. Run `npm run check:glossary` and `npm run check:sensitive` when content changes
 3. Commit on a feature branch → PR → merge to `main`
 
-Account briefs use **public sources only**. Hypotheses must stay labelled as hypotheses. Call Analysis should use synthetic or properly consented transcripts.
+Teaching content stays labelled — do not present hub copy as live customer intel. Call Analysis should use synthetic or properly consented transcripts.
 
 ---
 

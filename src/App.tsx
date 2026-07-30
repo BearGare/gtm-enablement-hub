@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { A, TL, BG, CD, C2, BO, TX, MU, SU, WA, ER } from "./colors";
 import type { ItemSection, Item, Message, ProgMap } from "./types";
-import type { Account, OutboundTone } from "./types";
-import { PILLARS, MODS, ARCH, PERSONAS, COMPS, DISC, ACCOUNTS, RELAY_AI, SDLC_STAGES, SDLC_INTRO, GLOSSARY, GLOSSARY_LOOKUP, SAMPLE_CALL_TRANSCRIPT } from "./data";
+import { PILLARS, MODS, ARCH, PERSONAS, COMPS, DISC, RELAY_AI, SDLC_STAGES, SDLC_INTRO, GLOSSARY, GLOSSARY_LOOKUP, SAMPLE_CALL_TRANSCRIPT } from "./data";
 
 // Sorted glossary keys longest-first so multi-word terms match before single words
 const GKEYS=Object.keys(GLOSSARY_LOOKUP).sort((a,b)=>b.length-a.length);
@@ -185,12 +184,10 @@ function Accordion({sections}:{sections:ItemSection[]}){
   );
 }
 
-type ChatMode="module"|"sdlc"|"persona"|"competitive"|"account"|"concept";
+type ChatMode="module"|"sdlc"|"persona"|"competitive"|"concept";
 function Modal({item,prog,onClose,onChat,onOpenItem,mode="module"}:{item:Item,prog:ProgMap,onClose:()=>void,onChat:(item:Item,mode:ChatMode)=>void,onOpenItem:(item:Item)=>void,mode?:ChatMode}){
   const title=item.title||item.n||item.co||"";
   const p=prog[item.id];
-  const isAccount=mode==="account";
-  const acct=isAccount?(item as Account):null;
   return(
     <div style={{position:"fixed",inset:0,background:"#000000bb",zIndex:20,display:"flex",alignItems:"center",justifyContent:"center",padding:20}} onClick={onClose}>
       <div onClick={e=>e.stopPropagation()} style={{background:CD,border:`1px solid ${BO}`,borderRadius:12,width:"100%",maxWidth:660,maxHeight:"88vh",overflow:"auto",padding:24,position:"relative"}}>
@@ -202,69 +199,12 @@ function Modal({item,prog,onClose,onChat,onOpenItem,mode="module"}:{item:Item,pr
               {item.b&&<Chip l={item.b} c={item.c||A}/>}
               {item.role&&<Chip l={item.role} c={TL}/>}
               {item.tag&&<Chip l={item.tag} c={A}/>}
-              {acct&&<Chip l={acct.industry} c={item.c||TL}/>}
               {p?.chatHistory&&<Chip l={`${p.msgCount||0} exchanges`} c={SU}/>}
             </div>
             <div style={{fontWeight:700,fontSize:17,lineHeight:1.3}}>{title}</div>
           </div>
         </div>
         {(item.short||item.sum)&&<div style={{color:MU,fontSize:13,marginBottom:12,lineHeight:1.6}}>{item.short||item.sum}</div>}
-
-        {/* Account-specific content */}
-        {acct&&(
-          <div style={{marginBottom:12}}>
-            {/* Public snapshot */}
-            <div style={{background:A+"09",border:`1px solid ${A}22`,borderRadius:8,padding:"10px 12px",marginBottom:8}}>
-              <div style={{fontSize:10,fontWeight:700,color:A,marginBottom:4,letterSpacing:.7}}>🔍 PUBLIC SNAPSHOT</div>
-              <div style={{fontSize:12,color:TX,lineHeight:1.65}}>{acct.publicSnapshot}</div>
-            </div>
-            {/* Public signals */}
-            {acct.publicSignals.length>0&&(
-              <div style={{marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,color:SU,marginBottom:5,letterSpacing:.7}}>📡 PUBLIC SIGNALS</div>
-                <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                  {acct.publicSignals.map((s,i)=>(
-                    <div key={i} style={{background:SU+"09",border:`1px solid ${SU}22`,borderRadius:6,padding:"7px 10px"}}>
-                      <div style={{fontSize:11,color:TX,lineHeight:1.55}}>{s.text}</div>
-                      {s.source&&<div style={{fontSize:10,color:MU,marginTop:2}}>Source: {s.source}</div>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {/* Hypotheses */}
-            {acct.hypotheses.length>0&&(
-              <div style={{marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,color:WA,marginBottom:5,letterSpacing:.7}}>💡 HYPOTHESES — VALIDATE IN DISCOVERY</div>
-                <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                  {acct.hypotheses.map((h,i)=>(
-                    <div key={i} style={{background:WA+"09",border:`1px solid ${WA}22`,borderRadius:6,padding:"7px 10px"}}>
-                      <div style={{fontSize:11,color:TX,lineHeight:1.55}}>{/^Hypothesis:/i.test(h.text)?h.text:`Hypothesis: ${h.text}`}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {/* Module fit */}
-            {acct.moduleFit.length>0&&(
-              <div style={{marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,color:MU,marginBottom:5,letterSpacing:.7}}>🧩 MODULE FIT HYPOTHESIS</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
-                  {acct.moduleFit.map((m,i)=><Chip key={i} l={m} c={A}/>)}
-                </div>
-              </div>
-            )}
-            {/* Outbound angles */}
-            {acct.outboundAngles.length>0&&(
-              <div style={{background:TL+"09",border:`1px solid ${TL}22`,borderRadius:8,padding:"10px 12px",marginBottom:8}}>
-                <div style={{fontSize:10,fontWeight:700,color:TL,marginBottom:5,letterSpacing:.7}}>✉️ OUTBOUND ANGLES</div>
-                <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                  {acct.outboundAngles.map((a,i)=><div key={i} style={{fontSize:11,color:TX,lineHeight:1.55}}>› {a}</div>)}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         {item.str&&(
           <>
@@ -322,7 +262,7 @@ function Modal({item,prog,onClose,onChat,onOpenItem,mode="module"}:{item:Item,pr
           </div>
         )}
         <button onClick={()=>onChat(item,mode)} style={{width:"100%",background:`linear-gradient(135deg,${A},${TL})`,color:BG,border:"none",borderRadius:8,padding:"11px",fontWeight:700,fontSize:14,cursor:"pointer",marginTop:2}}>
-          🧠 {p?.chatHistory?"Continue →":mode==="persona"?"Start Roleplay →":mode==="competitive"?"Practice Objection →":mode==="account"?"Practice this account →":mode==="concept"?"Explore Concept →":"Start Deep Dive →"}
+          🧠 {p?.chatHistory?"Continue →":mode==="persona"?"Start Roleplay →":mode==="competitive"?"Practice Objection →":mode==="concept"?"Explore Concept →":"Start Deep Dive →"}
         </button>
       </div>
     </div>
@@ -387,14 +327,6 @@ export default function App(){
   const[showBookmarks,setShowBookmarks]=useState(false);
   const[slackCopied,setSlackCopied]=useState(false);
 
-  // Outbound Lab state
-  const[obAccountId,setObAccountId]=useState("");
-  const[obPersonaId,setObPersonaId]=useState("");
-  const[obStageId,setObStageId]=useState("");
-  const[obTone,setObTone]=useState<OutboundTone>("curious");
-  const[obOutput,setObOutput]=useState<{email:string;linkedin:string;call:string;coachNotes:string}|null>(null);
-  const[obPolishing,setObPolishing]=useState(false);
-
   _setGPopover=setGPopover;
   _glossEnabled=glossEnabled;
   _fs=fontSize;
@@ -412,7 +344,7 @@ export default function App(){
     "relay cost":"cost","relay insights":"insights",
   };
   // Tab indices for new IA (must match TABS order below)
-  const STAB_MAP:{[k:string]:number}={sdlc:2,architecture:1,solutions:1,personas:3,competitive:5,discovery:7,glossary:8,calls:9,methodology:10,progress:11,settings:12,accounts:4,outbound:6};
+  const STAB_MAP:{[k:string]:number}={sdlc:2,architecture:1,solutions:1,personas:3,competitive:4,discovery:5,glossary:6,calls:7,progress:8,settings:9,methodology:9};
   const STAGE_IDS=new Set(["plan","code","build","test","secure","release","operate","improve"]);
 
   const openModByName=(name:string)=>{
@@ -481,9 +413,6 @@ export default function App(){
     return()=>window.removeEventListener("keydown",handler);
   },[]);
 
-  // Clear stale outbound drafts when inputs change so a live demo never shows the wrong account.
-  useEffect(()=>{ setObOutput(null); },[obAccountId,obPersonaId,obStageId,obTone]);
-
   const save=(p:ProgMap)=>{setProg(p);store.set("signalHubGTM",JSON.stringify(p));};
 
   const progSummary=():string=>{
@@ -505,7 +434,6 @@ export default function App(){
     const id=item.id;
     const prev=prog[id]?.chatHistory;
     const title=String(item.title||item.n||item.co||"this topic");
-    const acct=(item as Account).publicSnapshot?(item as Account):null;
     const opener=prev?`Picking up from your previous session on **${title}**. Where do you want to go from here?`:
       mode==="sdlc"?`Let's dig into the **${title}** stage of the SDLC.\n\n**Start here:** In your own words, what do you think actually happens during this stage? Don't worry about Relay yet — just tell me what you know (or think you know) about this part of software delivery. There are no wrong answers.`:
       mode==="concept"?`Let's build your understanding of **${title}** — not to pitch it, but so you can speak to it confidently when it comes up.\n\n**Start here:** In your own words, what does **${title}** actually do or mean within the Relay platform? Just your current understanding — no sales framing needed.`:
@@ -521,8 +449,6 @@ export default function App(){
         return `I'll play the **${title}**. You've got solid product coverage — let's see how it translates. Lead the call as you would with a real prospect. No scaffolding from here.`;
       })():
       mode==="competitive"?`Let's pressure-test your **${title}** knowledge.\n\nI'm a prospect who just said: *"We're already using ${title.replace(/^vs\.?\s*/i,"")} — we don't really see a reason to look at anything else."*\n\nHow do you respond?`:
-      mode==="account"?`Let's work on using the **${title}** account brief in a real conversation.\n\n${acct?.publicSnapshot?`Public context: ${acct.publicSnapshot.slice(0,200)}…\n\n`:""
-      }**Start here:** Based on what you know about this account from public sources, what would be your opening angle for a cold outreach or first discovery call? Walk me through your thinking.`:
       item.scenario
         ? `Let's get the **${title}** fundamentals solid before we get into scenarios.\n\n**Start here:** What does **${title}** actually do, and what's the strongest reason a ${item.buyer||"senior buyer"} would choose it over whatever they're already using? Give me your honest current answer — I'll build on it from there.`
         : `Ready to deep-dive on **${title}**.\n\n**Start here:** In your own words, how would you explain **${title}** to ${item.buyer||"a senior buyer"}? Don't worry about being perfect — I want to hear your current mental model so I can build on it.`;
@@ -612,24 +538,6 @@ Coaching approach:
 - Surface the landmines: things reps commonly say that backfire with this competitor's users.
 - After 3-4 exchanges, flip to pure coaching: "Here's the framework for this competitive conversation..."
 - Keep the rep active — never just lecture. Ask "what would you say next?" regularly.${repCtx}${masterySignal}`:
-      mode==="account"?
-`You are a Relay sales coach helping a rep prepare for an account based on public information only.
-
-Account: ${chat.topic.title}
-Public snapshot: ${(chat.topic as unknown as Account).publicSnapshot||chat.topic.short||""}
-Public signals: ${(chat.topic as unknown as Account).publicSignals?.map((s:{text:string})=>s.text).join("; ")||""}
-Hypotheses (unconfirmed): ${(chat.topic as unknown as Account).hypotheses?.map((h:{text:string})=>h.text).join("; ")||""}
-Module fit hypotheses: ${(chat.topic as unknown as Account).moduleFit?.join(", ")||""}
-Outbound angles: ${(chat.topic as unknown as Account).outboundAngles?.join("; ")||""}
-${platformCtx}
-
-Coaching approach:
-- Help the rep use PUBLIC signals carefully — distinguish between what's observable and what's assumption.
-- Challenge the rep to turn hypotheses into specific discovery questions, not assertions.
-- Roleplay the first 2 minutes of a cold call or intro email; coach what lands.
-- Never invent private knowledge about this account — all coaching must be grounded in public information or explicitly labelled as hypothesis.
-- Emphasise: strong reps show curiosity, not omniscience. Hypotheses are entry points to discovery, not claims.
-- Tone: direct, practical, focused on real outreach quality.${repCtx}${masterySignal}`:
       // default: module coaching
 `You are a Relay sales coaching assistant for the GTM organisation. Keep responses to 3-5 sentences then a question or scenario.
 
@@ -674,7 +582,6 @@ Coaching style:
 
   const buildCallSystem=():string=>{
     const modCtx=MODS.map(m=>`- **${m.title}**: ${m.short}`).join("\n");
-    const accountCtx=ACCOUNTS.map(a=>`- **${a.title}** (${a.industry}): ${a.short}`).join("\n");
     return `You are an expert Relay GTM analyst reviewing a sales call transcript. Your job is to give the rep direct, honest, actionable intelligence — no coaching, no questions back.
 
 ANALYSIS FORMAT — produce these sections in order with these exact headings:
@@ -692,18 +599,12 @@ Overall tone: Warm / Neutral / Cold. List the key signals — specific phrases o
 ## Relay Module Fit
 Which Relay modules are relevant, tied to specific things said. Don't list a module unless there's real evidence.
 
-## Reference Accounts
-Which of these publicly-known accounts have similar profiles and could be referenced as context (do NOT claim customer status — these are comparable public companies): ${ACCOUNTS.map(a=>a.title).join(", ")}.
-
 ## Recommended Next Steps
 Concrete actions the rep should take after this call.
 
 ---
 RELAY MODULES:
 ${modCtx}
-
-COMPARABLE PUBLIC ACCOUNTS (for reference positioning only — not customer claims):
-${accountCtx}
 
 IMPORTANT: Be specific — reference what was actually said. Be honest — reps need accurate qualification intel, not optimism. Answer all follow-up questions directly without asking the rep to explain or reflect first.
 
@@ -840,11 +741,10 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
       if(hit(m.title,m.short,m.d,m.sa))add("Solutions",m.title||"",m.short||"",m.e||"🧩",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});
       m.subModules?.forEach(s=>{if(hit(s.title,s.short,s.d,s.sa))add("Solutions",s.title||"",s.short||"",s.e||"🧩",()=>{setShowSearch(false);setModal(s);save({...prog,[s.id]:{...(prog[s.id]||{}),visited:true,lastVisit:Date.now()}});});});
     });
-    ARCH.forEach(m=>{if(hit(m.n?.toString(),m.d,m.sa))add("Architecture",m.n?.toString()||"",(m.d||"").slice(0,80),"⚙️",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
+    ARCH.forEach(m=>{if(hit(m.title,m.short,m.d,m.sa))add("Architecture",m.title||"",(m.short||m.d||"").slice(0,80),m.e||"⚙️",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
     PERSONAS.forEach(m=>{if(hit(m.title,m.n?.toString(),m.role,m.short,m.d,m.str,m.sa))add("Personas",m.title||m.n?.toString()||"",m.role||"","👤",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
     COMPS.forEach(m=>{if(hit(m.n?.toString(),m.co,m.str,m.adv,m.wo,m.d))add("Competitive",m.n?.toString()||m.co||"",(m.str||"").slice(0,80),"⚔️",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
-    ACCOUNTS.forEach(m=>{if(hit(m.title,m.short,m.publicSnapshot,m.industry))add("Accounts",m.title||"",m.short||"",m.e||"🏢",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
-    for(const cat of GLOSSARY){for(const t of cat.terms){if((out["Glossary"]?.length||0)>=6)break;if(t.term.toLowerCase().includes(lo)||t.def.toLowerCase().includes(lo))add("Glossary",t.term,t.def.slice(0,80),"📖",()=>{setShowSearch(false);setTab(8);setGlossarySearch(t.term);});}}
+    for(const cat of GLOSSARY){for(const t of cat.terms){if((out["Glossary"]?.length||0)>=6)break;if(t.term.toLowerCase().includes(lo)||t.def.toLowerCase().includes(lo))add("Glossary",t.term,t.def.slice(0,80),"📖",()=>{setShowSearch(false);setTab(6);setGlossarySearch(t.term);});}}
     return out;
   };
 
@@ -902,129 +802,21 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
   });
 
   const DISC_ITEMS:Item[]=DISC.map((g,gi)=>({id:`disc-${gi}`,title:g.title,e:"🔍"}));
-  const allItems:Item[]=[...MODS,...ARCH,...PERSONAS,...COMPS,...ACCOUNTS,...DISC_ITEMS];
+  const allItems:Item[]=[...MODS,...ARCH,...PERSONAS,...COMPS,...DISC_ITEMS];
   const visited=allItems.filter(it=>tierOf(prog[it.id])!=="none").length;
   const practicedCount=allItems.filter(it=>tierOf(prog[it.id])==="practiced").length;
   const mastered=allItems.filter(it=>tierOf(prog[it.id])==="mastered").length;
   const pct=Math.round((visited/allItems.length)*100);
 
-  const TABS=["🏠 Dashboard","🧩 Solutions","🔄 SDLC","👥 Personas","🏢 Accounts","⚔️ Competitive","✉️ Outbound","🔍 Discovery","📖 Glossary","📞 Calls","📋 Methodology","🎯 Progress","⚙️ Settings"];
-
-  // ── Outbound Lab helpers ─────────────────────────────────────────────────
-  const generateOutbound=()=>{
-    const account=ACCOUNTS.find(a=>a.id===obAccountId);
-    const persona=PERSONAS.find(p=>p.id===obPersonaId);
-    const stage=SDLC_STAGES.find(s=>s.id===obStageId);
-    if(!account||!persona||!stage)return;
-
-    const signal=account.publicSignals[0]?.text||"";
-    const stageName=stage.st||stage.title||stage.id;
-    const angle=account.outboundAngles[0]||`${stageName} challenges in engineering orgs like ${account.title}`;
-    const role=persona.role||persona.title||"";
-    const mods=account.moduleFit.slice(0,2).join(" and ")||"Relay CD";
-    const hyp=(account.hypotheses[0]?.text||"").replace(/^Hypothesis:\s*/i,"");
-    const signalHook=signal.split(".")[0]?.trim()||`Public materials suggest ${account.title} continues to invest in engineering platforms`;
-
-    const toneIntro={
-      curious:`I came across ${account.title}'s engineering blog and had a question`,
-      direct:`Quick outreach — I work with platform teams on ${stageName} challenges`,
-      peer:`Saw you're heading ${role.toLowerCase()} — we've been talking to a few ${account.industry} teams about something similar`,
-    }[obTone];
-
-    const email=`Subject: ${stageName} at ${account.title} — quick question
-
-Hi [Name],
-
-${toneIntro}.
-
-${signalHook}.
-
-Specifically — how are you thinking about ${stageName.toLowerCase()} as your teams scale? A few ${account.industry} engineering orgs I work with have been grappling with the gap between shipping speed and production confidence.
-
-Worth a 20-minute conversation?
-
-[Your name]`;
-
-    const linkedin=`Hi [Name] — noticed ${account.title} is hiring across ${stageName.toLowerCase()}-related roles. Quick question: how is your team handling ${stageName.toLowerCase()} challenges as you scale? Happy to share how a couple of ${account.industry} orgs tackled it — no pitch, just context. Open to a quick call?`;
-
-    const callOpener=`Hi [Name], this is [Your name] — reason for my call: I work with ${account.industry} engineering orgs on ${stageName.toLowerCase()}. Public info suggests ${account.title} is investing in platform and delivery reliability. We have a thesis that [${hyp||"teams like yours face X challenge"}] — am I off base, or is that somewhere you're putting focus?`;
-
-    const coachNotes=`**Why this angle may resonate:**
-${angle}
-
-**Supporting public signal:**
-${signal||"No specific signal — rely on industry pattern."}
-
-**Hypothesis (validate, don't assert):**
-${hyp?`Hypothesis: ${hyp}`:"No specific hypothesis — focus on open discovery questions."}
-
-**What to avoid:**
-- Claiming ${account.title} uses Relay (they don't — this is outbound)
-- Assuming the hypothesis is fact — it is an entry point, not intel
-- Leading with product features before confirming pain
-
-**How to validate or invalidate your hypothesis:**
-Ask: "${account.qualQuestions[0]||`How does your team handle ${stageName.toLowerCase()} today?`}"
-Then: "${account.qualQuestions[1]||"What would have to be true for a new tool to be worth evaluating?"}"
-
-**Relevant Relay modules (if discovery confirms fit):**
-${mods}
-
-**Persona lens:** ${persona.title||persona.n||"Selected persona"} — ${role}`;
-
-    setObOutput({email,linkedin,call:callOpener,coachNotes});
-  };
-
-  const polishWithAI=async()=>{
-    if(!obOutput||obPolishing)return;
-    setObPolishing(true);
-    try{
-      const account=ACCOUNTS.find(a=>a.id===obAccountId);
-      const persona=PERSONAS.find(p=>p.id===obPersonaId);
-      const stage=SDLC_STAGES.find(s=>s.id===obStageId);
-      const sys=`You are a senior B2B GTM writer refining outbound messaging. Make the copy crisper, more specific, and more likely to get a reply. Keep the same structure and length — improve word choice, specificity, and hook strength. Do not invent facts about the account. Return only the improved copy in the same format.`;
-      const body=`Account: ${account?.title} (${account?.industry})
-Persona: ${persona?.title}
-Stage: ${stage?.st}
-Tone: ${obTone}
-
-Email:
-${obOutput.email}
-
-LinkedIn:
-${obOutput.linkedin}
-
-Call opener:
-${obOutput.call}`;
-      const r=await fetch("/api/chat",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1200,system:sys,messages:[{role:"user",content:body}]})
-      });
-      const d=await r.json();
-      const reply=d.content?.[0]?.text||"";
-      if(reply){
-        const emailM=reply.match(/Email:([\s\S]*?)(?=LinkedIn:|$)/i);
-        const liM=reply.match(/LinkedIn:([\s\S]*?)(?=Call opener:|$)/i);
-        const callM=reply.match(/Call opener:([\s\S]*?)$/i);
-        setObOutput(prev=>prev?{
-          ...prev,
-          email:emailM?emailM[1].trim():prev.email,
-          linkedin:liM?liM[1].trim():prev.linkedin,
-          call:callM?callM[1].trim():prev.call,
-        }:null);
-      }
-    }catch{}
-    setObPolishing(false);
-  };
+  const TABS=["🏠 Dashboard","🧩 Solutions","🔄 SDLC","👥 Personas","⚔️ Competitive","🔍 Discovery","📖 Glossary","📞 Calls","🎯 Progress","⚙️ Settings"];
 
   return(
     <div style={{minHeight:"100vh",background:BG,color:TX,fontFamily:"Inter,system-ui,sans-serif",fontSize:14,opacity:loaded?1:0,transition:"opacity .2s"}}>
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div style={{background:CD,borderBottom:`1px solid ${BO}`,padding:"11px 18px",display:"flex",alignItems:"center",gap:12,position:"sticky",top:0,zIndex:10}}>
-        <div style={{width:32,height:32,borderRadius:7,background:`linear-gradient(135deg,${A},${TL})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:14,color:BG,flexShrink:0}}>S</div>
+        <div style={{width:32,height:32,borderRadius:7,background:`linear-gradient(135deg,${A},${TL})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:14,color:BG,flexShrink:0}}>G</div>
         <div>
-          <div style={{fontWeight:700,fontSize:14,letterSpacing:-.2,fontFamily:"Poppins,system-ui,sans-serif"}}>GTM Signal Hub</div>
+          <div style={{fontWeight:700,fontSize:14,letterSpacing:-.2,fontFamily:"Poppins,system-ui,sans-serif"}}>GTM Enablement Hub</div>
           <div style={{fontSize:11,color:MU}}>Relay · <span style={{color:A,fontWeight:600}}>Full-SDLC GTM enablement</span></div>
         </div>
         <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8}}>
@@ -1057,14 +849,14 @@ ${obOutput.call}`;
         {/* ── tab 0: Dashboard ─────────────────────────────────────────── */}
         {tab===0&&(
           <div>
-            <Hdr title="GTM Signal Hub" accent="Signal Hub" sub="Relay full-SDLC enablement — explore modules, account briefs, outbound templates, and AI coaching."/>
+            <Hdr title="GTM Enablement Hub" accent="Enablement Hub" sub="Relay full-SDLC enablement — explore modules, personas, competitive landscape, discovery, and AI coaching."/>
             {/* Stats row */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:20}}>
               {[
                 {l:"Solutions",v:MODS.length,e:"🧩",onClick:()=>setTab(1)},
-                {l:"Accounts",v:ACCOUNTS.length,e:"🏢",onClick:()=>setTab(4)},
                 {l:"Personas",v:PERSONAS.length,e:"👥",onClick:()=>setTab(3)},
-                {l:"Battlecards",v:COMPS.length,e:"⚔️",onClick:()=>setTab(5)},
+                {l:"Battlecards",v:COMPS.length,e:"⚔️",onClick:()=>setTab(4)},
+                {l:"Discovery",v:DISC.reduce((n,g)=>n+g.qs.length,0),e:"🔍",onClick:()=>setTab(5)},
               ].map((s,i)=>(
                 <div key={i} onClick={s.onClick} style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:"16px 14px",textAlign:"center",cursor:"pointer",transition:"all .2s"}}
                   onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.borderColor=A+"55";(e.currentTarget as HTMLDivElement).style.background=C2;}}
@@ -1078,10 +870,10 @@ ${obOutput.call}`;
             {/* CTA cards */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:20}}>
               {[
-                {title:"Explore SDLC Map",sub:"Understand the full software delivery lifecycle and where Relay fits.",e:"🔄",tab:2,c:A},
-                {title:"Open an Account Brief",sub:"Public-signal briefs on Stripe, Shopify, Datadog, and more.",e:"🏢",tab:4,c:TL},
-                {title:"Try Outbound Lab",sub:"Generate personalised email, LinkedIn, and call openers in seconds.",e:"✉️",tab:6,c:WA},
-                {title:"Paste a Call",sub:"AI analysis of your transcript — fit, sentiment, pain points, next steps.",e:"📞",tab:9,c:SU},
+                {title:"Explore SDLC Map",sub:"Walk the full software delivery value stream and find where work waits.",e:"🔄",tab:2,c:A},
+                {title:"Browse Solutions",sub:"Four value pillars powered by Relay AI — explore every module.",e:"🧩",tab:1,c:TL},
+                {title:"Meet the Personas",sub:"Buyer personas for the full committee — discovery tactics and roleplay.",e:"👥",tab:3,c:WA},
+                {title:"Paste a Call",sub:"AI analysis of your transcript — fit, sentiment, pain points, next steps.",e:"📞",tab:7,c:SU},
               ].map((cta,i)=>(
                 <div key={i} onClick={()=>setTab(cta.tab)}
                   style={{background:CD,border:`1px solid ${cta.c}33`,borderRadius:10,padding:"16px 18px",cursor:"pointer",transition:"all .2s"}}
@@ -1099,10 +891,10 @@ ${obOutput.call}`;
               <div style={{fontWeight:700,fontSize:13,color:A,marginBottom:10}}>📋 Suggested path — 4 steps</div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {[
-                  {n:"1",t:"Start with the SDLC map","d":"Walk the value stream. Find where work waits — that stage is the wedge, and Relay already covers the rest when they are ready."},
-                  {n:"2",t:"Open an account brief","d":"Pick Stripe, Shopify, or Cloudflare. Separate public signals from labelled hypotheses before you build a play."},
-                  {n:"3",t:"Generate outbound in the Lab","d":"Outbound tab → pick account, persona, SDLC stage, tone → Generate Openers. Review AI Coach Notes (optional: Polish with AI)."},
-                  {n:"4",t:"Practise on a call transcript","d":"Calls tab → Load sample transcript → Analyse Call. Review fit rating, pain points, and module alignment."},
+                  {n:"1",t:"Start with the SDLC map","d":"Walk the value stream. Find where work waits — that stage is the wedge."},
+                  {n:"2",t:"Open Solutions / Relay AI","d":"Learn the modules that sit on that constraint."},
+                  {n:"3",t:"Study the buyer persona","d":"How that persona thinks about the constraint and what good sounds like."},
+                  {n:"4",t:"Practise discovery or a call","d":"Discovery tab for questions; Calls tab to analyse a transcript."},
                 ].map((step,i)=>(
                   <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                     <div style={{width:22,height:22,borderRadius:99,background:A,color:BG,fontWeight:700,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>{step.n}</div>
@@ -1124,7 +916,7 @@ ${obOutput.call}`;
                 <div style={{width:100,background:BO,borderRadius:99,height:5,overflow:"hidden"}}>
                   <div style={{width:`${pct}%`,height:"100%",background:`linear-gradient(90deg,${A},${TL})`}}/>
                 </div>
-                <button onClick={()=>setTab(11)} style={{background:"none",border:`1px solid ${BO}`,borderRadius:7,padding:"5px 11px",fontSize:11,color:MU,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>View progress →</button>
+                <button onClick={()=>setTab(8)} style={{background:"none",border:`1px solid ${BO}`,borderRadius:7,padding:"5px 11px",fontSize:11,color:MU,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>View progress →</button>
               </div>
             )}
           </div>
@@ -1247,10 +1039,10 @@ ${obOutput.call}`;
                     style={{background:CD,border:`1px solid ${BO}`,borderRadius:8,padding:12,cursor:"pointer",display:"flex",gap:10,alignItems:"center",transition:"all .2s"}}
                     onMouseEnter={e=>{(e.currentTarget as HTMLDivElement).style.background=C2;(e.currentTarget as HTMLDivElement).style.borderColor=s.c+"55";}}
                     onMouseLeave={e=>{(e.currentTarget as HTMLDivElement).style.background=CD;(e.currentTarget as HTMLDivElement).style.borderColor=BO;}}>
-                    <div style={{width:28,height:28,borderRadius:99,background:s.c+"22",color:s.c,fontWeight:800,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{s.n}</div>
+                    <div style={{width:28,height:28,borderRadius:99,background:s.c+"22",color:s.c,fontWeight:800,fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{s.e}</div>
                     <div style={{flex:1}}>
                       <div style={{fontWeight:700,fontSize:12,marginBottom:1}}>{s.title}</div>
-                      <div style={{fontSize:11,color:MU,lineHeight:1.5}}>{fmt(String(s.sum||""))}</div>
+                      <div style={{fontSize:11,color:MU,lineHeight:1.5}}>{fmt(String(s.short||""))}</div>
                     </div>
                     <Dot p={prog} id={s.id}/>
                   </div>
@@ -1341,35 +1133,8 @@ ${obOutput.call}`;
           </div>
         )}
 
-        {/* ── tab 4: Accounts ───────────────────────────────────────────── */}
-        {tab===4&&(
-          <div>
-            <Hdr title="Account Briefs" accent="Account" sub="Public-signal account intelligence. Signals are observable; hypotheses are labelled — validate in discovery."/>
-            <Callout c={WA} ch={<><strong style={{color:WA}}>Methodology note:</strong> All briefs are built from public sources only (careers pages, engineering blogs, product docs, public marketing). Hypotheses are clearly labelled and must be validated in discovery. Do not claim any company uses Relay.</>}/>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:10}}>
-              {ACCOUNTS.map(a=>(
-                <CardWrap key={a.id} onClick={()=>{setModal(a);save({...prog,[a.id]:{...(prog[a.id]||{}),visited:true,lastVisit:Date.now()}});}} accent={a.c||A} prog={prog} id={a.id}>
-                  <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
-                    <div style={{fontSize:26,flexShrink:0}}>{a.e}</div>
-                    <div style={{flex:1}}>
-                      <Chip l={a.industry} c={a.c||TL}/>
-                      <div style={{fontWeight:700,fontSize:14,margin:"6px 0 4px"}}>{a.title}</div>
-                    </div>
-                  </div>
-                  <div style={{fontSize:12,color:MU,lineHeight:1.6,marginBottom:8}}>{a.short}</div>
-                  <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:6}}>
-                    {a.publicSignals.length>0&&<Chip l={`${a.publicSignals.length} public signals`} c={SU}/>}
-                    {a.hypotheses.length>0&&<Chip l={`${a.hypotheses.length} hypotheses`} c={WA}/>}
-                  </div>
-                  <div style={{fontSize:11,fontWeight:700,color:a.c||A}}>Open brief →</div>
-                </CardWrap>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── tab 5: Competitive ────────────────────────────────────────── */}
-        {tab===5&&(()=>{
+        {/* ── tab 4: Competitive ────────────────────────────────────────── */}
+        {tab===4&&(()=>{
           const COMP_CATS=[
             {id:"all",label:"All"},
             {id:"featured",label:"⭐ Top"},
@@ -1425,117 +1190,8 @@ ${obOutput.call}`;
           );
         })()}
 
-        {/* ── tab 6: Outbound Lab ───────────────────────────────────────── */}
-        {tab===6&&(
-          <div>
-            <Hdr title="Outbound Lab" accent="Lab" sub="Generate personalised email, LinkedIn, and call openers from public account signals. Templates are deterministic — no API needed."/>
-            <Callout c={TL} ch={<><strong style={{color:TL}}>Methodology:</strong> All generated copy uses only public signals from the account brief. Hypotheses are framed as questions, not assertions. Review before sending — treat output as a starting draft.</>}/>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-              {/* Account selector */}
-              <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:9,padding:"14px 15px"}}>
-                <div style={{fontSize:11,fontWeight:700,color:MU,marginBottom:7,textTransform:"uppercase",letterSpacing:.5}}>Account</div>
-                <div style={{display:"flex",flexDirection:"column",gap:5}}>
-                  <button onClick={()=>setObAccountId("")}
-                    style={{background:obAccountId===""?A+"22":C2,border:`1px solid ${obAccountId===""?A:BO}`,borderRadius:6,padding:"7px 10px",fontSize:12,fontWeight:600,color:obAccountId===""?A:MU,cursor:"pointer",textAlign:"left",transition:"all .15s"}}>
-                    — Select account —
-                  </button>
-                  {ACCOUNTS.map(a=>(
-                    <button key={a.id} onClick={()=>setObAccountId(a.id)}
-                      style={{background:obAccountId===a.id?A+"22":C2,border:`1px solid ${obAccountId===a.id?A:BO}`,borderRadius:6,padding:"7px 10px",fontSize:12,fontWeight:600,color:obAccountId===a.id?A:MU,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:7,transition:"all .15s"}}>
-                      <span style={{fontSize:14}}>{a.e}</span>
-                      <span>{a.title}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Persona selector */}
-              <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:9,padding:"14px 15px"}}>
-                <div style={{fontSize:11,fontWeight:700,color:MU,marginBottom:7,textTransform:"uppercase",letterSpacing:.5}}>Persona</div>
-                <div style={{display:"flex",flexDirection:"column",gap:5}}>
-                  <button onClick={()=>setObPersonaId("")}
-                    style={{background:obPersonaId===""?A+"22":C2,border:`1px solid ${obPersonaId===""?A:BO}`,borderRadius:6,padding:"7px 10px",fontSize:12,fontWeight:600,color:obPersonaId===""?A:MU,cursor:"pointer",textAlign:"left",transition:"all .15s"}}>
-                    — Select persona —
-                  </button>
-                  {PERSONAS.map(p=>(
-                    <button key={p.id} onClick={()=>setObPersonaId(p.id)}
-                      style={{background:obPersonaId===p.id?A+"22":C2,border:`1px solid ${obPersonaId===p.id?A:BO}`,borderRadius:6,padding:"7px 10px",fontSize:12,fontWeight:600,color:obPersonaId===p.id?A:MU,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:7,transition:"all .15s"}}>
-                      <span style={{fontSize:14}}>{p.e||"👤"}</span>
-                      <span>{p.title||p.n}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
-              {/* Stage selector */}
-              <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:9,padding:"14px 15px"}}>
-                <div style={{fontSize:11,fontWeight:700,color:MU,marginBottom:7,textTransform:"uppercase",letterSpacing:.5}}>SDLC Stage</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
-                  {SDLC_STAGES.map(s=>(
-                    <button key={s.id} onClick={()=>setObStageId(s.id)}
-                      style={{background:obStageId===s.id?s.c+"22":C2,border:`1px solid ${obStageId===s.id?s.c:BO}`,borderRadius:6,padding:"6px 11px",fontSize:11,fontWeight:600,color:obStageId===s.id?s.c:MU,cursor:"pointer",transition:"all .15s",display:"flex",alignItems:"center",gap:5}}>
-                      <span>{s.e}</span>
-                      <span>{s.st}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Tone selector */}
-              <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:9,padding:"14px 15px"}}>
-                <div style={{fontSize:11,fontWeight:700,color:MU,marginBottom:7,textTransform:"uppercase",letterSpacing:.5}}>Tone</div>
-                <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                  {([["curious","Curious — question-led, humble, exploratory"],["direct","Direct — value-first, concise, no fluff"],["peer","Peer — technical empathy, engineer-to-engineer"]] as [OutboundTone,string][]).map(([t,desc])=>(
-                    <button key={t} onClick={()=>setObTone(t)}
-                      style={{background:obTone===t?A+"22":C2,border:`1px solid ${obTone===t?A:BO}`,borderRadius:6,padding:"8px 10px",fontSize:12,fontWeight:600,color:obTone===t?A:MU,cursor:"pointer",textAlign:"left",transition:"all .15s"}}>
-                      {desc}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={generateOutbound}
-              disabled={!obAccountId||!obPersonaId||!obStageId}
-              style={{width:"100%",marginBottom:16,background:(!obAccountId||!obPersonaId||!obStageId)?"#1A2E48":`linear-gradient(135deg,${A},${TL})`,color:(!obAccountId||!obPersonaId||!obStageId)?MU:"#07101E",border:"none",borderRadius:8,padding:"13px",fontWeight:700,fontSize:14,cursor:(!obAccountId||!obPersonaId||!obStageId)?"not-allowed":"pointer",transition:"all .2s"}}>
-              ✉️ Generate Openers
-            </button>
-            {obOutput&&(
-              <div>
-                {/* Output panels */}
-                {[
-                  {label:"📧 Email",content:obOutput.email,key:"email"},
-                  {label:"💼 LinkedIn",content:obOutput.linkedin,key:"linkedin"},
-                  {label:"📞 Call Opener",content:obOutput.call,key:"call"},
-                ].map(({label,content})=>(
-                  <div key={label} style={{background:CD,border:`1px solid ${BO}`,borderRadius:9,padding:"14px 15px",marginBottom:10}}>
-                    <div style={{fontWeight:700,fontSize:12,color:A,marginBottom:8}}>{label}</div>
-                    <pre style={{margin:0,fontFamily:"inherit",fontSize:12,color:TX,lineHeight:1.65,whiteSpace:"pre-wrap",wordBreak:"break-word"}}>{content}</pre>
-                    <button
-                      onClick={()=>navigator.clipboard.writeText(content)}
-                      style={{marginTop:8,background:"none",border:`1px solid ${BO}`,borderRadius:6,padding:"4px 11px",fontSize:11,color:MU,cursor:"pointer",fontWeight:600}}>
-                      📋 Copy
-                    </button>
-                  </div>
-                ))}
-                {/* Coach Notes */}
-                <div style={{background:WA+"09",border:`1px solid ${WA}22`,borderRadius:9,padding:"14px 15px",marginBottom:10}}>
-                  <div style={{fontWeight:700,fontSize:12,color:WA,marginBottom:8}}>🧠 AI Coach Notes</div>
-                  <Md t={obOutput.coachNotes}/>
-                </div>
-                {/* Polish with AI */}
-                <button
-                  onClick={polishWithAI}
-                  disabled={obPolishing}
-                  style={{width:"100%",background:obPolishing?C2:`linear-gradient(135deg,${TL},${A})`,color:obPolishing?MU:"#07101E",border:obPolishing?`1px solid ${BO}`:"none",borderRadius:8,padding:"11px",fontWeight:700,fontSize:13,cursor:obPolishing?"not-allowed":"pointer",transition:"all .2s"}}>
-                  {obPolishing?"✨ Polishing…":"✨ Polish with AI"}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── tab 7: Discovery ──────────────────────────────────────────── */}
-        {tab===7&&(
+        {/* ── tab 5: Discovery ──────────────────────────────────────────── */}
+        {tab===5&&(
           <div>
             <Hdr title="Discovery Questions" accent="Questions" sub="Grouped by theme. Click any to see rationale and follow-ups."/>
             <div style={{display:"flex",flexDirection:"column",gap:18}}>
@@ -1571,8 +1227,8 @@ ${obOutput.call}`;
           </div>
         )}
 
-        {/* ── tab 8: Glossary ───────────────────────────────────────────── */}
-        {tab===8&&(()=>{
+        {/* ── tab 6: Glossary ───────────────────────────────────────────── */}
+        {tab===6&&(()=>{
           const sq=glossarySearch.toLowerCase().trim();
           const searchResults=sq?GLOSSARY.flatMap(cat=>
             cat.terms.filter(t=>t.term.toLowerCase().includes(sq)||t.def.toLowerCase().includes(sq))
@@ -1638,8 +1294,8 @@ ${obOutput.call}`;
           );
         })()}
 
-        {/* ── tab 9: Calls ──────────────────────────────────────────────── */}
-        {tab===9&&(
+        {/* ── tab 7: Calls ──────────────────────────────────────────────── */}
+        {tab===7&&(
           <div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
               <div>
@@ -1865,33 +1521,8 @@ ${obOutput.call}`;
           </div>
         )}
 
-        {/* ── tab 10: Methodology ───────────────────────────────────────── */}
-        {tab===10&&(
-          <div>
-            <Hdr title="Research standards" accent="Methodology" sub="How this hub treats account research, hypotheses, and AI-assisted coaching."/>
-            <div style={{display:"flex",flexDirection:"column",gap:14}}>
-              {[
-                {icon:"🧩",title:"Relay is the product under study",c:SU,body:`GTM Signal Hub is the enablement system for Relay — a fictional full-SDLC delivery platform spanning planning, AI-assisted coding, and delivery.\n\nEverything in the hub is framed for Relay GTM: modules, personas, competitive landscape, discovery, and outbound plays.`},
-                {icon:"📡",title:"Public sources only for account briefs",c:A,body:`Account briefs (Stripe, Shopify, Datadog, etc.) are built exclusively from publicly available information: careers pages, engineering blogs, public product documentation, and public marketing materials.\n\nNo account brief implies a customer relationship, a live evaluation, or insider knowledge. These companies have not endorsed this tool.`},
-                {icon:"💡",title:"Hypotheses are labelled — not facts",c:WA,body:`Every hypothesis in an account brief is explicitly labelled "Hypothesis" and is intended as a starting point for discovery, not a factual assertion. The rep's job is to validate or invalidate these hypotheses through open-ended discovery questions — not to present them as research.\n\nStrong reps show curiosity. Weak reps pretend to know.`},
-                {icon:"🤖",title:"AI-powered coaching and analysis",c:TL,body:`The coaching chat, call analysis, and outbound polish features use Claude (Anthropic) via a secure server-side proxy. No API key is exposed to the browser. All AI outputs should be reviewed before use — the system will occasionally be wrong, especially on specifics.\n\nCall analysis is for learning and qualification framing — not for sharing with prospects.`},
-                {icon:"⚒️",title:"How the hub is built",c:MU,body:`Single-page React + TypeScript (Vite) with a Node.js serverless API proxy for coaching and call analysis. Optional whole-hub RAG via Turso / libSQL and Voyage embeddings.\n\nFor setup and architecture, see README.md.`},
-              ].map(({icon,title,c,body},i)=>(
-                <div key={i} style={{background:CD,border:`1px solid ${c}33`,borderRadius:10,padding:"18px 20px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-                    <span style={{fontSize:22}}>{icon}</span>
-                    <div style={{fontWeight:700,fontSize:14,color:TX}}>{title}</div>
-                    <div style={{width:6,height:6,borderRadius:99,background:c,flexShrink:0}}/>
-                  </div>
-                  <div style={{fontSize:12,color:MU,lineHeight:1.75,whiteSpace:"pre-line"}}>{body}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── tab 11: Progress ──────────────────────────────────────────── */}
-        {tab===11&&(
+        {/* ── tab 8: Progress ──────────────────────────────────────────── */}
+        {tab===8&&(
           <div>
             <Hdr title="My Learning Progress" accent="Progress" sub="Every deep dive builds context. Dot colours: grey = not started, amber = visited, green = deep dived."/>
             {(()=>{
@@ -1934,7 +1565,6 @@ ${obOutput.call}`;
               {label:"Architecture",items:ARCH as Item[]},
               {label:"Personas",items:PERSONAS as Item[]},
               {label:"Competitive",items:COMPS as Item[]},
-              {label:"Accounts",items:ACCOUNTS as Item[]},
               {label:"Discovery",items:DISC_ITEMS},
             ].map(({label,items})=>(
               <div key={label} style={{marginBottom:18}}>
@@ -1945,7 +1575,7 @@ ${obOutput.call}`;
                     const tColor=t==="mastered"?SU:t==="practiced"?A:t==="viewed"?WA:BO;
                     const isDisc=item.id.startsWith("disc-");
                     return(
-                      <div key={item.id} onClick={()=>isDisc?setTab(7):setModal(item)} style={{background:CD,border:`1px solid ${t==="none"?BO:tColor+"33"}`,borderRadius:7,padding:"9px 13px",cursor:"pointer",display:"flex",alignItems:"center",gap:11,transition:"all .15s"}}
+                      <div key={item.id} onClick={()=>isDisc?setTab(5):setModal(item)} style={{background:CD,border:`1px solid ${t==="none"?BO:tColor+"33"}`,borderRadius:7,padding:"9px 13px",cursor:"pointer",display:"flex",alignItems:"center",gap:11,transition:"all .15s"}}
                         onMouseEnter={e=>(e.currentTarget as HTMLDivElement).style.background=C2}
                         onMouseLeave={e=>(e.currentTarget as HTMLDivElement).style.background=CD}>
                         <div style={{fontSize:15}}>{item.e||"•"}</div>
@@ -1965,10 +1595,10 @@ ${obOutput.call}`;
           </div>
         )}
 
-        {/* ── tab 12: Settings ──────────────────────────────────────────── */}
-        {tab===12&&(
+        {/* ── tab 9: Settings ──────────────────────────────────────────── */}
+        {tab===9&&(
           <div>
-            <Hdr title="Settings" accent="Settings" sub="Global preferences and data management for your GTM Signal Hub session."/>
+            <Hdr title="Settings" accent="Settings" sub="Global preferences and data management for your GTM Enablement Hub session."/>
 
             {/* ── Your Profile ── */}
             <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:"20px 22px",marginBottom:14}}>
@@ -2100,6 +1730,19 @@ ${obOutput.call}`;
                 </div>
               </div>
             </div>
+
+            {/* ── About this hub ── */}
+            <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:"20px 22px",marginBottom:14,opacity:0.95}}>
+              <div style={{fontWeight:700,fontSize:13,color:MU,marginBottom:4}}>About this hub</div>
+              <div style={{fontSize:12,color:MU,marginBottom:16,lineHeight:1.6}}>Research standards and how this enablement hub is meant to be used — impressum-style reference.</div>
+              <Accordion sections={[
+                {title:"1. Relay is the product under study",content:`GTM Enablement Hub is the enablement system for Relay — a fictional full-SDLC delivery platform. Framed for Relay GTM: modules, personas, competitive landscape, discovery, and call practice.`},
+                {title:"2. Teaching content, labelled clearly",content:`Personas, competitive cards, and discovery prompts are teaching material. Hypotheses and illustrative scenarios are labelled — validate in real discovery; do not present hub content as customer intel.`},
+                {title:"3. Competitive and discovery standards",content:`Competitive cards follow NAMING.md framing. Discovery is constraint-first: find where work waits, then map Relay modules.`},
+                {title:"4. AI-powered coaching and analysis",content:`Coaching chat and call analysis use Claude via server-side proxy. Review AI outputs before use.`},
+                {title:"5. How the hub is built",content:`React + TypeScript (Vite), serverless API proxy, optional RAG via Turso/Voyage. See README.md.`},
+              ]}/>
+            </div>
           </div>
         )}
       </div>
@@ -2139,7 +1782,7 @@ ${obOutput.call}`;
               <span style={{fontSize:16,flexShrink:0}}>🔍</span>
               <input autoFocus value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}
                 onKeyDown={e=>{if(e.key==="Escape")setShowSearch(false);}}
-                placeholder="Search solutions, battlecards, personas, accounts, glossary…"
+                placeholder="Search solutions, battlecards, personas, discovery, glossary…"
                 style={{flex:1,background:"none",border:"none",outline:"none",color:TX,fontSize:14,fontFamily:"inherit"}}/>
               <kbd style={{fontSize:10,color:MU,background:C2,border:`1px solid ${BO}`,borderRadius:4,padding:"2px 6px",flexShrink:0}}>ESC</kbd>
             </div>
@@ -2191,7 +1834,6 @@ ${obOutput.call}`;
                 {label:"Architecture",items:bItems.filter(i=>ARCH.some(m=>m.id===i.id))},
                 {label:"Personas",items:bItems.filter(i=>PERSONAS.some(m=>m.id===i.id))},
                 {label:"Competitive",items:bItems.filter(i=>COMPS.some(m=>m.id===i.id))},
-                {label:"Accounts",items:bItems.filter(i=>ACCOUNTS.some(m=>m.id===i.id))},
               ].filter(g=>g.items.length>0);
               return groups.map(({label,items})=>(
                 <div key={label} style={{marginBottom:16}}>
@@ -2248,7 +1890,7 @@ ${obOutput.call}`;
             {callHistory.length===0&&<div style={{color:MU,fontSize:13}}>No saved calls yet.</div>}
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
               {callHistory.map(h=>(
-                <div key={h.id} onClick={()=>{setCallMsgs(h.messages);setCurrentCallId(h.id);setCallAccount(h.account||"");setCallContact(h.contact||"");setCallModules(h.modules||[]);setTab(9);setShowCallHistory(false);setEditingCallMeta(false);}}
+                <div key={h.id} onClick={()=>{setCallMsgs(h.messages);setCurrentCallId(h.id);setCallAccount(h.account||"");setCallContact(h.contact||"");setCallModules(h.modules||[]);setTab(7);setShowCallHistory(false);setEditingCallMeta(false);}}
                   style={{background:currentCallId===h.id?A+"11":C2,border:`1px solid ${currentCallId===h.id?A+"44":BO}`,borderRadius:8,padding:"11px 13px",cursor:"pointer",transition:"all .15s"}}
                   onMouseEnter={e=>(e.currentTarget as HTMLDivElement).style.borderColor=A+"55"}
                   onMouseLeave={e=>(e.currentTarget as HTMLDivElement).style.borderColor=currentCallId===h.id?A+"44":BO}>
@@ -2263,7 +1905,7 @@ ${obOutput.call}`;
       )}
 
       {/* ── Modal ─────────────────────────────────────────────────────────── */}
-      {modal&&!chat&&<Modal item={modal} prog={prog} onClose={()=>setModal(null)} onChat={openChat} mode={(RELAY_AI_IDS.has(modal.id)?"concept":modal.role?"persona":modal.str?"competitive":(modal as Account).publicSnapshot?"account":"module") as ChatMode} onOpenItem={(item:Item)=>{save({...prog,[item.id]:{...(prog[item.id]||{}),visited:true,lastVisit:Date.now()}});setModal(item);}}/>}
+      {modal&&!chat&&<Modal item={modal} prog={prog} onClose={()=>setModal(null)} onChat={openChat} mode={(RELAY_AI_IDS.has(modal.id)?"concept":modal.role?"persona":modal.str?"competitive":"module") as ChatMode} onOpenItem={(item:Item)=>{save({...prog,[item.id]:{...(prog[item.id]||{}),visited:true,lastVisit:Date.now()}});setModal(item);}}/>}
 
       {/* ── Chat panel ────────────────────────────────────────────────────── */}
       {chat&&(
