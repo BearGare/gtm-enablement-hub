@@ -24,7 +24,7 @@ export const ACCOUNTS: Account[] = [
    ],
    personas:["CTO","VP Engineering","Head of Platform","Security Engineering Lead","FinOps / Cloud Cost Owner"],
    pains:["High cost of regressions on payment-critical paths","Need for governed progressive delivery","Scanner noise vs developer trust","Attribution of cloud spend across many services"],
-   moduleFit:["Relay Deploy","Relay Verify","Relay Secure","Relay Supply","Relay Insights","Relay Cost"],
+   moduleFit:["Relay CD","Relay Test","Relay Secure","Relay Supply","Relay Insights","Relay Cost"],
    outboundAngles:[
      "Lead with change management for API-heavy estates: safer progressive delivery without slowing merchant-facing roadmaps.",
      "Ask how they separate 'shipped' from 'verified healthy' after deploys on critical services.",
@@ -69,7 +69,7 @@ No logos-as-customers. No invented metrics. Cite only public source types.`,
    ],
    personas:["VP Engineering","Head of Platform","Developer Experience Lead","Director of DevOps","FinOps / Cloud Cost Owner"],
    pains:["Peak-traffic change risk","Fragmented team pipelines","Onboarding time across many services","Non-prod environment sprawl"],
-   moduleFit:["Relay Deploy","Relay Verify","Relay Portal","Relay Flags","Relay Cost","Relay Insights"],
+   moduleFit:["Relay CD","Relay Test","Relay Portal","Relay Flags","Relay Cost","Relay Insights"],
    outboundAngles:[
      "Peak-readiness without permanent freeze culture — verification and progressive delivery as the wedge.",
      "DevEx: time-to-first-production-change for new merchants-facing squads.",
@@ -107,9 +107,9 @@ Commerce peak risk and developer extensibility are public themes. Convert to que
    ],
    personas:["Head of Platform","Director of DevOps","Security Engineering Lead","VP Engineering","FinOps / Cloud Cost Owner"],
    pains:["NIH / high bar for vendors","Need for CD verification that hooks existing metrics","Toolchain consolidation fatigue"],
-   moduleFit:["Relay Deploy","Relay Verify","Relay Secure","Relay Cost","Relay Insights"],
+   moduleFit:["Relay CD","Relay Test","Relay Secure","Relay Cost","Relay Insights"],
    outboundAngles:[
-     "Explicitly non-competitive with observability: Relay Verify uses their signals to automate deploy health decisions.",
+     "Explicitly non-competitive with observability: Relay CD release verification uses their signals to automate deploy health decisions.",
      "Ask about AI coding impact on review and change failure — Insights wedge.",
      "Cost of build farms and non-prod as a neutral entry if delivery tooling is sacred.",
    ],
@@ -125,7 +125,7 @@ Commerce peak risk and developer extensibility are public themes. Convert to que
    d:`## Datadog — account brief (public sources only)
 Highest risk of mis-positioning. Frame Relay as plan-to-prod control plane that *reads* observability signals.`,
    sections:[
-     {title:"Positioning guardrail",open:true,content:`Never pitch Relay Observe as replacing their stack. If Observe is mentioned, it is change intelligence and delivery context — secondary to Deploy/Verify/Secure.`},
+     {title:"Positioning guardrail",open:true,content:`Never pitch Relay SRE as replacing their stack. If SRE is mentioned, it is change intelligence and delivery context — secondary to Relay CD / Relay Test / Relay Secure.`},
    ]},
 
   {id:"notion",title:"Notion",e:"📝",c:MU,industry:"Collaboration / Productivity SaaS",
@@ -139,14 +139,14 @@ Highest risk of mis-positioning. Frame Relay as plan-to-prod control plane that 
    hypotheses:[
      {kind:"hypothesis",text:"Hypothesis: Small-to-mid platform team supporting many product squads — golden paths and Portal messaging may land."},
      {kind:"hypothesis",text:"Hypothesis: AI feature work increases release cadence pressure; verification automation becomes more valuable."},
-     {kind:"hypothesis",text:"Hypothesis: Planning surface is culturally central; Relay Plan linkage to delivery may resonate if work tracking is fragmented across tools."},
+     {kind:"hypothesis",text:"Hypothesis: Planning surface is culturally central; Relay Plans linkage to delivery may resonate if work tracking is fragmented across tools."},
      {kind:"hypothesis",text:"Hypothesis: Security wants stronger tenant-isolation confidence in delivery pipelines and secrets handling."},
    ],
    personas:["VP Engineering","Engineering Manager","Developer Experience Lead","Security Engineering Lead","Head of Platform"],
    pains:["Rapid product iteration vs regression risk","Onboarding across expanding codebase","AI-assisted PR volume","Need for cleaner audit trail of changes"],
-   moduleFit:["Relay Portal","Relay CI","Relay Deploy","Relay Verify","Relay Secure","Relay Plan","Relay Insights"],
+   moduleFit:["Relay Portal","Relay CI","Relay CD","Relay Test","Relay Secure","Relay Plans","Relay Insights"],
    outboundAngles:[
-     "Inner-loop + outer-loop: AI coding volume without proportional release risk.",
+     "AI coding velocity without proportional release risk — code and delivery as one value stream.",
      "DevEx: paved road from template to production for new services.",
      "Ask how AI product initiatives changed their release train discipline.",
    ],
@@ -162,7 +162,7 @@ Highest risk of mis-positioning. Frame Relay as plan-to-prod control plane that 
    d:`## Notion — account brief (public sources only)
 Product-led velocity story. Keep hypotheses labelled; confirm toolchain before module mapping.`,
    sections:[
-     {title:"Discovery focus",open:true,content:`Confirm CI/CD ownership, IDP maturity, and whether Insights (AI delivery measurement) is a door opener versus Deploy/Verify.`},
+     {title:"Discovery focus",open:true,content:`Confirm CI/CD ownership, IDP maturity, and whether Insights (AI delivery measurement) is a door opener versus Relay CD / Relay Test.`},
    ]},
 
   {id:"cloudflare",title:"Cloudflare",e:"☁️",c:A,industry:"Edge network / Security / Developer platform",
@@ -181,7 +181,7 @@ Product-led velocity story. Keep hypotheses labelled; confirm toolchain before m
    ],
    personas:["Head of Platform","Security Engineering Lead","VP Engineering","Director of DevOps","Developer Experience Lead"],
    pains:["Heterogeneous deploy targets","High security bar for toolchain","Need for policy consistency across many teams","Risk of vendor tools that do not fit edge workflows"],
-   moduleFit:["Relay Deploy","Relay Secure","Relay Portal","Relay Insights","Relay Cost"],
+   moduleFit:["Relay CD","Relay Secure","Relay Portal","Relay Insights","Relay Cost"],
    outboundAngles:[
      "Speak engineer-to-engineer; lead with architecture and failure modes, not slides.",
      "Ask how policy and review apply across edge vs core services.",
@@ -218,7 +218,7 @@ Technical credibility first. Hypotheses only until discovery confirms gaps.`,
    ],
    personas:["Head of Platform","VP Engineering","Developer Experience Lead","Engineering Manager","FinOps / Cloud Cost Owner"],
    pains:["Autonomy vs standardisation tension","Onboarding across many squads","Inconsistent delivery paths","Cloud efficiency at large footprint"],
-   moduleFit:["Relay Portal","Relay Deploy","Relay Verify","Relay Insights","Relay Cost","Relay Secure"],
+   moduleFit:["Relay Portal","Relay CD","Relay Test","Relay Insights","Relay Cost","Relay Secure"],
    outboundAngles:[
      "Autonomy with guardrails: golden paths that squads still want to use.",
      "Ask how they measure cross-squad delivery health without central chokepoints.",
@@ -231,7 +231,7 @@ Technical credibility first. Hypotheses only until discovery confirms gaps.`,
      "Which platform capabilities are self-service vs ticket queues?",
    ],
    risks:["Famous internal engineering culture — high NIH","Complex stakeholder map","Long enterprise process"],
-   nextAction:"Identify Platform/DevEx champion; propose squad-level PoC with adoption metrics (not just tool install); keep Flags/Observe complementary.",
+   nextAction:"Identify Platform/DevEx champion; propose squad-level PoC with adoption metrics (not just tool install); keep Flags/SRE complementary.",
    sa:"Respect autonomy narrative. Relay is paved road + verification, not central command-and-control theatre.",
    d:`## Spotify — account brief (public sources only)
 Culture-aware outbound. Label hypotheses. No implied design partnership or customer status.`,
