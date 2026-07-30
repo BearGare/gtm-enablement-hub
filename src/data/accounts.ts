@@ -43,7 +43,7 @@ export const ACCOUNTS: Account[] = [
 Use public materials only. All opportunity conclusions below are **hypotheses**.
 
 ## Why Relay might resonate (hypothesis)
-Payments-grade change management + developer velocity is a classic tension. Relay's deploy/verify/secure spine is a plausible fit **if** discovery confirms pipeline fragmentation or verification gaps.
+Payments-grade change management + developer velocity is a classic tension. Relay's CD / Test / Secure spine is a plausible fit **if** discovery confirms pipeline fragmentation or verification gaps.
 
 ## Talk track caution
 No logos-as-customers. No invented metrics. Cite only public source types.`,

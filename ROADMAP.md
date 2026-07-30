@@ -14,6 +14,7 @@ The Turso + Voyage RAG coaching layer is in place (see [README](README.md#option
 
 ## Near term
 
+- [x] Canonical Relay naming (CI/CD, 14 modules) + value-stream SDLC reframe — see `docs/NAMING.md`
 - [ ] Richer public-source citations on account briefs (URL + date where possible)
 - [ ] Outbound pack export (clipboard / markdown)
 - [ ] Dual-write progress / bookmarks / call history to Turso

@@ -11,7 +11,7 @@ export const PERSONAS: Item[] = [
 The CTO sets technical direction and defends AI and platform investment upward. Tool selection is usually delegated; they care whether the organisation can ship safely at the pace the business demands.
 
 ## How they evaluate
-They listen for a coherent thesis (plan → code → ship → observe → optimise), credible peer patterns in their industry, and a clear answer on measurement. Demo-heavy meetings lose them. A tight exec narrative plus a peer conversation wins.
+They listen for a coherent thesis (plan → code → ship → operate → improve), credible peer patterns in their industry, and a clear answer on measurement. Demo-heavy meetings lose them. A tight exec narrative plus a peer conversation wins.
 
 ## Conversation posture
 Stay at strategy: delivery risk, AI investment ROI, platform consolidation, and competitive velocity. Redirect feature depth to VP Eng / Head of Platform.`,
@@ -34,8 +34,8 @@ Stay at strategy: delivery risk, AI investment ROI, platform consolidation, and 
 
 **Strong**
 - Velocity vs verification gap: more code in ≠ more safe releases out
-- One platform spanning plan → code → deploy → observe → cost, so they can tell one story upward
-- Peer-pattern language: "organisations your size are measuring AI impact at the *deployment* layer, not the IDE layer"
+- One platform spanning plan → code → release → operate → cost, so they can tell one story upward
+- Peer-pattern language: "organisations your size are measuring AI impact at the *release* layer, not the IDE layer"
 - Offer a 20-minute exec framing call + optional peer intro — not a product walkthrough`},
     {title:"Discovery questions",open:false,content:`- How do you currently report AI coding-tool ROI to the board or exec team?
 - When productivity metrics look up but review time and incidents also rise — how do you reconcile that?
@@ -338,7 +338,7 @@ Sometimes titled DevEx, Developer Productivity, or IDP owner. Obsessed with fric
 - Ignoring software catalog + scorecard politics
 
 **Strong**
-- Golden path: create service → CI → secure defaults → deploy → observe in one flow
+- Golden path: create service → CI → secure defaults → release → operate in one flow
 - Measure adoption weekly during PoC
 - Integrate with their existing work tracker and SCM
 - Frame Relay as the execution engine behind DevEx, not a competing "portal brand"`},

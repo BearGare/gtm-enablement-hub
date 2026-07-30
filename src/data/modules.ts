@@ -2,16 +2,16 @@ import { A, TL, WA, ER, MU } from "../colors";
 import type { Item } from "../types";
 
 export const PILLARS = [
-  { id: "inner", label: "Inner loop for", value: "Focus", c: A, e: "✏️" },
-  { id: "delivery", label: "Delivery for", value: "Velocity", c: WA, e: "🚀" },
-  { id: "security", label: "Security for", value: "Trust", c: ER, e: "🛡️" },
-  { id: "efficiency", label: "Efficiency for", value: "Leverage", c: TL, e: "📈" },
+  { id: "create", label: "Create for", value: "Focus", c: A, e: "✏️" },
+  { id: "deliver", label: "Deliver for", value: "Velocity", c: WA, e: "🚀" },
+  { id: "protect", label: "Protect for", value: "Trust", c: ER, e: "🛡️" },
+  { id: "operate", label: "Operate for", value: "Leverage", c: TL, e: "📈" },
 ];
 
 export const MODS: Item[] = [
   {
     id: "plans",
-    pillar: "inner",
+    pillar: "create",
     b: "Plan",
     e: "📋",
     c: A,
@@ -21,13 +21,13 @@ export const MODS: Item[] = [
     buyer: "VP Product / Head of Engineering",
     scenario: "A product director says planning lives in one tool and delivery reality in another. How do you show that the gap — not the backlog tool — is the problem?",
     d: `## Relay Plans — from roadmap intent to delivery truth
-Planning fails quietly when the backlog and the delivery system disagree. Relay Plans connects roadmap items, epics, and sprint commitments to the services and pipelines that actually ship them — so status is grounded in commits, builds, and deploys rather than status meetings.
+Planning fails quietly when the backlog and the delivery system disagree. Relay Plans connects roadmap items, epics, and sprint commitments to the services and pipelines that actually ship them — so status is grounded in commits, builds, and releases rather than status meetings.
 
 ## Shared visibility without ripping out existing tools
 Teams keep their issue trackers and docs. Relay Plans overlays ownership, dependencies, and delivery health so product, platform, and eng leadership see the same blockers. Teams often see fewer surprise slips once cycle-time and WIP signals sit next to the roadmap.
 
-## Why it matters in the AI coding era
-When individuals write code faster, planning debt shows up as thrash: half-finished epics, unclear ownership, and sprint commitments that never matched capacity. Plans closes that loop with delivery-aware roadmaps.`,
+## Why it matters when coding accelerates
+When individuals write code faster, planning debt shows up as thrash: half-finished epics, unclear ownership, and sprint commitments that never matched capacity. Plans keeps commitments honest with delivery-aware roadmaps.`,
     sections: [
       {
         title: "⚙️ Capabilities",
@@ -47,7 +47,7 @@ When individuals write code faster, planning debt shows up as thrash: half-finis
         open: false,
         content: `**Work tracking:** Jira, Linear, Azure Boards, GitHub Issues.
 
-**Source & delivery:** GitHub, GitLab, Bitbucket; Relay Build / Deploy pipelines.
+**Source & delivery:** GitHub, GitLab, Bitbucket; Relay CI / Relay CD pipelines.
 
 **Docs:** Confluence, Notion (read-only context links).
 
@@ -82,7 +82,7 @@ When individuals write code faster, planning debt shows up as thrash: half-finis
   },
   {
     id: "code",
-    pillar: "inner",
+    pillar: "create",
     b: "Code",
     e: "💻",
     c: A,
@@ -97,8 +97,8 @@ Relay Code helps developers navigate large repos, propose changes with local con
 ## PR quality as a first-class outcome
 Inline explanations, risk hints, and checklist enforcement reduce rubber-stamp reviews. Teams often see shorter PR cycle times when reviewers get context and diffs stay small.
 
-## Inner-loop leverage that respects the outer loop
-Faster coding only pays off if builds, security, and deploys can absorb the volume. Relay Code is designed to hand clean, policy-aware changes into Relay Build and Relay Secure.`,
+## Hand clean changes into the rest of the stream
+Faster coding only pays off if CI, security, and release can absorb the volume. Relay Code is designed to hand clean, policy-aware changes into Relay CI and Relay Secure.`,
     sections: [
       {
         title: "⚙️ Capabilities",
@@ -120,7 +120,7 @@ Faster coding only pays off if builds, security, and deploys can absorb the volu
 
 **IDEs:** VS Code, JetBrains family, browser workspaces.
 
-**Delivery:** Opens PRs that trigger Relay Build / Secure automatically.
+**Delivery:** Opens PRs that trigger Relay CI / Relay Secure automatically.
 
 **Chat & tickets:** Optional links back to Jira / Linear work items.`,
       },
@@ -152,294 +152,8 @@ Faster coding only pays off if builds, security, and deploys can absorb the volu
     ],
   },
   {
-    id: "build",
-    pillar: "delivery",
-    b: "Build",
-    e: "⚡",
-    c: WA,
-    title: "Relay Build",
-    short: "CI with build intelligence, selective tests, and caching — absorb AI-era code volume without hour-long pipelines.",
-    sa: "Ask: 'How long is a full CI run, and how many times a day does each developer wait on it?' Do the maths live.",
-    buyer: "VP Engineering / Platform Lead",
-    scenario: "A team lead shrugs that 40-minute builds are 'just how it is.' How do you turn that into a productivity and cost conversation?",
-    d: `## Relay Build — CI that keeps up with AI output
-AI coding tools increase merge frequency. Pipelines designed for weekly batches become the bottleneck. Relay Build combines selective test execution, dependency caching, and incremental builds so feedback stays in the flow of work.
-
-## Intelligence over brute force
-Run the tests and compile steps that the change actually touches. Teams often see dramatically shorter queues and fewer flaky-test stalls without dropping coverage discipline.
-
-## Managed runners, governed templates
-Hosted or self-hosted runners with reusable pipeline templates and policy gates — so every repo inherits org standards instead of copy-pasted YAML.`,
-    sections: [
-      {
-        title: "⚙️ Capabilities",
-        open: false,
-        content: `**Test intelligence:** Select tests impacted by the change; quarantine flaky offenders.
-
-**Cache & build intelligence:** Auto dependency caches and skip unchanged components.
-
-**Hosted runners:** Linux / macOS / Windows options; scale to zero when idle.
-
-**Templates & governance:** Golden pipelines with mandatory stages and approvals.
-
-**Failure assist:** Summarise logs and suggest likely fixes for common breakages.`,
-      },
-      {
-        title: "🔌 Integrations",
-        open: false,
-        content: `**SCM webhooks:** GitHub, GitLab, Bitbucket, Azure Repos.
-
-**Languages:** Java, JS/TS, Python, Go, .NET, Ruby, Kotlin, and more.
-
-**Plugin reuse:** Bring existing GitHub Actions / community steps where useful.
-
-**Artifacts:** Push images and packages to Relay Supply or third-party registries.
-
-**Notify:** Slack, Teams, email, Jira on failure.`,
-      },
-      {
-        title: "🛡️ Objections",
-        open: false,
-        content: `**"We use GitHub Actions"** → Strong for repo-native CI. Ask about selective tests, multi-cloud deploy handoff, and org-wide template enforcement at scale.
-
-**"Jenkins is free"** → Free licence ≠ free TCO. Quantify plugin and agent maintenance FTE.
-
-**"Migration is too hard"** → Start new services on Relay Build; coexist until old pipelines age out.`,
-      },
-      {
-        title: "🎯 Who buys",
-        open: false,
-        content: `- Platform teams drowning in CI maintenance
-- Eng leaders whose AI coding adoption outpaced pipeline capacity
-- Orgs consolidating fragmented CI across business units`,
-      },
-      {
-        title: "💬 Discovery questions",
-        open: false,
-        content: `• Median and p95 CI duration on main?
-• How much of CI time is tests that couldn't possibly be affected?
-• Who owns flaky-test quarantine today?
-• How many distinct CI systems exist across the org?
-• What does a failed build cost in interrupted focus time?`,
-      },
-    ],
-  },
-  {
-    id: "secure",
-    pillar: "security",
-    b: "Secure",
-    e: "🛡️",
-    c: ER,
-    title: "Relay Secure",
-    short: "DevSecOps orchestration — SAST, SCA, containers, secrets, and policy-as-code with noise reduction.",
-    sa: "Ask: 'When a critical CVE lands, how long until the owning team has a reachable, prioritised fix list — not a PDF?'",
-    buyer: "CISO / AppSec Lead / Platform Security",
-    scenario: "Security says scanners are 'deployed' but developers ignore the queue. How do you reframe from more findings to fewer actionable ones in the PR?",
-    d: `## Relay Secure — security that developers will act on
-Relay Secure orchestrates multiple scanner types in the pipeline, deduplicates findings, and ranks by reachability and exploitability so the backlog is work — not noise.
-
-## Policy-as-code at merge and promote
-OPA-style gates encode org rules: block criticals on main, require attestations before prod, enforce licence policy. Exceptions are explicit and auditable.
-
-## Shift left without a separate ticket queue
-Findings appear on the PR with owner context. Teams often see faster remediation when feedback arrives in the same place as the code change.`,
-    sections: [
-      {
-        title: "⚙️ Capabilities",
-        open: false,
-        content: `**Scanner orchestration:** SAST, SCA, container, secrets, IaC — unified results.
-
-**Dedup & ranking:** Collapse duplicate CVEs; prioritise reachable paths.
-
-**Policy-as-code:** Mandatory gates per environment with break-glass workflow.
-
-**Developer UX:** Inline PR annotations and fix guidance.
-
-**Audit trail:** Who waived what, when, and why.`,
-      },
-      {
-        title: "🔌 Integrations",
-        open: false,
-        content: `**Scanners:** Bring existing commercial and open-source scanners; Relay normalises output.
-
-**SCM:** Native PR checks on GitHub / GitLab / Bitbucket.
-
-**Ticketing:** Optional Jira / ServiceNow defect creation for criticals.
-
-**Runtime handoff:** Feeds Relay Deploy gates and Relay Supply attestations.`,
-      },
-      {
-        title: "🛡️ Objections",
-        open: false,
-        content: `**"We already have Snyk / Checkmarx"** → Keep licences. Secure orchestrates and prioritises across tools so AppSec isn't a PDF factory.
-
-**"Security gates slow us down"** → Unprioritised queues slow you more. Reachability-ranked gates unblock safe changes faster.
-
-**"Developers won't fix it"** → Put findings on the PR with owners from the catalog — not a weekly email.`,
-      },
-      {
-        title: "🎯 Who buys",
-        open: false,
-        content: `- AppSec leaders drowning in false positives
-- Platform teams embedding security into golden paths
-- Regulated industries needing auditable policy enforcement`,
-      },
-      {
-        title: "💬 Discovery questions",
-        open: false,
-        content: `• What's your mean time to remediate critical CVEs?
-• What percentage of scanner findings are ever fixed?
-• Are security checks on every PR or only nightly?
-• How do you prove an artifact met policy before prod?
-• Who owns waivers and how are they reviewed?`,
-      },
-    ],
-  },
-  {
-    id: "deploy",
-    pillar: "delivery",
-    b: "Deploy",
-    e: "🚀",
-    c: A,
-    title: "Relay Deploy",
-    short: "Progressive delivery and GitOps — canary, blue/green, verification, and automatic rollback.",
-    sa: "Ask: 'When a bad deploy hits prod, how long until you know — and how long until you're back on the last good version?'",
-    buyer: "VP Engineering / Platform / SRE Lead",
-    scenario: "A prospect says Argo CD 'works fine.' How do you probe for verification, rollback, and multi-service release pain without dismissing GitOps?",
-    d: `## Relay Deploy — ship with a controlled blast radius
-Relay Deploy runs canary, blue/green, and rolling strategies across Kubernetes and traditional targets. Post-deploy verification watches real health signals and can roll back automatically when the change looks unhealthy.
-
-## GitOps without the maintenance tax
-Git remains the desired-state source. Relay manages agents, promotions, and approvals so platform teams aren't patching controllers at 2am.
-
-## Release orchestration for real systems
-Multi-service releases coordinate dependencies: if one service fails its gate, dependents hold. Teams often see fewer "works in staging" surprises once verification is continuous.`,
-    sections: [
-      {
-        title: "⚙️ Capabilities",
-        open: false,
-        content: `**Strategies:** Canary, blue/green, rolling, custom traffic shaping.
-
-**Continuous verification:** Compare post-deploy metrics to baselines; auto-rollback.
-
-**GitOps:** PR-driven promotions, multi-cluster sync, ApplicationSet-style patterns.
-
-**Approvals & tickets:** Human gates plus Jira / ServiceNow change records.
-
-**DORA outs:** Deployment frequency and change-failure inputs for Relay Insights.`,
-      },
-      {
-        title: "🔌 Integrations",
-        open: false,
-        content: `**Targets:** Kubernetes, ECS, serverless, VMs (SSH/WinRM), major clouds.
-
-**Manifests:** Helm, Kustomize, native YAML, Terraform-adjacent config.
-
-**Observability for CV:** Datadog, Prometheus, New Relic, Dynatrace, CloudWatch, Splunk.
-
-**Artifacts:** Container registries and Relay Supply.`,
-      },
-      {
-        title: "🛡️ Objections",
-        open: false,
-        content: `**"We use Argo / Spinnaker"** → Ask who maintains it and whether verification + auto-rollback are first-class. Relay adds the intelligence layer on managed GitOps.
-
-**"GitHub Actions deploys for us"** → Fine for simple promote scripts. Progressive delivery and CV are usually custom YAML debt.
-
-**"Rollback is rare"** → Until it isn't. Measure time-to-detect and time-to-revert on the last three incidents.`,
-      },
-      {
-        title: "🎯 Who buys",
-        open: false,
-        content: `- Platform and SRE teams accountable for change failure rate
-- Orgs increasing deploy frequency after AI coding adoption
-- Regulated environments needing auditable progressive delivery`,
-      },
-      {
-        title: "💬 Discovery questions",
-        open: false,
-        content: `• What's your change failure rate and MTTR after a bad deploy?
-• Is rollback automated or a runbook someone hopes to find?
-• How do you coordinate multi-service releases today?
-• Who maintains your GitOps controllers and how often do upgrades break?
-• What signals define a "healthy" deploy besides "pods are up"?`,
-      },
-    ],
-  },
-  {
-    id: "flags",
-    pillar: "delivery",
-    b: "Flags",
-    e: "🚩",
-    c: A,
-    title: "Relay Flags",
-    short: "Feature flags and experimentation — decouple deploy from release, progressive exposure, kill switches.",
-    sa: "Ask: 'Can you ship code to production dark and expose it to 1% of users — without a new deploy?'",
-    buyer: "VP Product / Eng Manager / Platform",
-    scenario: "Product wants faster experiments; eng fears Friday deploys. How do you show flags as the bridge between velocity and safety?",
-    d: `## Relay Flags — deploy continuously, release deliberately
-Relay Flags separates "code is in production" from "users can see it." Progressive rollouts, targeting rules, and instant kill switches reduce the risk of every release.
-
-## Experimentation without a side tool silo
-A/B tests and multivariate flags share the same governance as delivery — approvals, environments, and audit. Teams often see more experiments per sprint when flags are part of the platform, not a separate vendor island.
-
-## Safer AI-era shipping
-More code volume means more feature surface. Flags keep blast radius small while Relay Deploy and Relay Secure handle the pipeline.`,
-    sections: [
-      {
-        title: "⚙️ Capabilities",
-        open: false,
-        content: `**Progressive exposure:** Percentage rollouts, rings, and attribute targeting.
-
-**Experimentation:** A/B assignments with metric hooks.
-
-**Kill switches:** Instant disable without rollback of the whole release.
-
-**SDK coverage:** Major languages and mobile; local evaluation options.
-
-**Governance:** Environment-scoped permissions and change history.`,
-      },
-      {
-        title: "🔌 Integrations",
-        open: false,
-        content: `**Relay Deploy:** Flag state as part of release orchestration.
-
-**Analytics:** Export exposures to your warehouse / product analytics.
-
-**CI:** Smoke-test flag defaults in Relay Build.
-
-**Catalog:** Flag ownership tied to Relay Portal services.`,
-      },
-      {
-        title: "🛡️ Objections",
-        open: false,
-        content: `**"We use LaunchDarkly / Flagsmith"** → Acknowledge strength. Position Relay Flags on platform economics and deploy+flag+verify in one workflow.
-
-**"Flags create tech debt"** → True without hygiene. Relay surfaces stale flags and owners via the catalog.
-
-**"Product doesn't need experiments"** → Kill switches and dark launches still pay for themselves on incident day.`,
-      },
-      {
-        title: "🎯 Who buys",
-        open: false,
-        content: `- Product orgs running continuous discovery / experimentation
-- Platform teams standardising release safety
-- Mobile and multi-tenant SaaS needing targeted exposure`,
-      },
-      {
-        title: "💬 Discovery questions",
-        open: false,
-        content: `• How do you dark-launch today?
-• What's the process to turn off a bad feature at 2am?
-• How many stale flags exist, and who cleans them?
-• Are experiments blocked on eng capacity to wire flags?
-• Do flags and deploys share an audit story for compliance?`,
-      },
-    ],
-  },
-  {
     id: "portal",
-    pillar: "delivery",
+    pillar: "create",
     b: "Portal",
     e: "🏗️",
     c: MU,
@@ -462,7 +176,7 @@ Self-service workflows create repos, pipelines, and baseline configs in minutes.
         open: false,
         content: `**Software catalog:** Services, APIs, owners, SLOs, dependencies.
 
-**Templates / golden paths:** Scaffold with CI, Secure, Deploy wired in.
+**Templates / golden paths:** Scaffold with CI, Secure, CD wired in.
 
 **Scorecards:** Security, reliability, and docs standards as living scores.
 
@@ -473,7 +187,7 @@ Self-service workflows create repos, pipelines, and baseline configs in minutes.
       {
         title: "🔌 Integrations",
         open: false,
-        content: `**SCM & CI/CD:** GitHub, GitLab, Relay Build / Deploy.
+        content: `**SCM & CI/CD:** GitHub, GitLab, Relay CI / Relay CD.
 
 **Observability:** Datadog, PagerDuty, Grafana links on entities.
 
@@ -509,9 +223,295 @@ Self-service workflows create repos, pipelines, and baseline configs in minutes.
     ],
   },
   {
+    id: "ci",
+    pillar: "deliver",
+    b: "CI",
+    e: "⚡",
+    c: WA,
+    title: "Relay CI",
+    short: "Continuous integration with caching and governed templates — absorb AI-era merge volume without hour-long pipelines.",
+    sa: "Ask: 'How long is a full CI run, and how many times a day does each developer wait on it?' Do the maths live.",
+    buyer: "VP Engineering / Platform Lead",
+    scenario: "A team lead shrugs that 40-minute builds are 'just how it is.' How do you turn that into a productivity and cost conversation?",
+    d: `## Relay CI — pipelines that keep up with AI output
+AI coding tools increase merge frequency. Pipelines designed for weekly batches become the bottleneck. Relay CI combines dependency caching, incremental builds, and governed templates so feedback stays in the flow of work. Pair with Relay Test for impact-based suite selection.
+
+## Managed runners, governed templates
+Hosted or self-hosted runners with reusable pipeline templates and policy gates — so every repo inherits org standards instead of copy-pasted YAML.
+
+## Failure assist, not blame
+Summarise logs and suggest likely fixes for common breakages so developers get unblocked faster.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Cache & incremental builds:** Auto dependency caches and skip unchanged components.
+
+**Hosted runners:** Linux / macOS / Windows options; scale to zero when idle.
+
+**Templates & governance:** Golden pipelines with mandatory stages and approvals.
+
+**Failure assist:** Summarise logs and suggest likely fixes for common breakages.
+
+**Handoff to Relay Test:** Trigger impact-based suites and flake quarantine as first-class stages.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**SCM webhooks:** GitHub, GitLab, Bitbucket, Azure Repos.
+
+**Languages:** Java, JS/TS, Python, Go, .NET, Ruby, Kotlin, and more.
+
+**Plugin reuse:** Bring existing GitHub Actions / community steps where useful.
+
+**Artifacts:** Push images and packages to Relay Supply or third-party registries.
+
+**Notify:** Slack, Teams, email, Jira on failure.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We use GitHub Actions"** → Strong for repo-native CI. Ask about org-wide template enforcement, multi-cloud release handoff, and suite selection at scale (Relay Test).
+
+**"Jenkins is free"** → Free licence ≠ free TCO. Quantify plugin and agent maintenance FTE.
+
+**"Migration is too hard"** → Start new services on Relay CI; coexist until old pipelines age out.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- Platform teams drowning in CI maintenance
+- Eng leaders whose AI coding adoption outpaced pipeline capacity
+- Orgs consolidating fragmented CI across business units`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• Median and p95 CI duration on main?
+• How much of CI time is tests that couldn't possibly be affected?
+• Who owns flaky-test quarantine today?
+• How many distinct CI systems exist across the org?
+• What does a failed build cost in interrupted focus time?`,
+      },
+    ],
+  },
+  {
+    id: "test",
+    pillar: "deliver",
+    b: "Test",
+    e: "🧪",
+    c: WA,
+    title: "Relay Test",
+    short: "Impact-based test selection, flake quarantine, AI test generation, and self-healing E2E.",
+    sa: "Ask: 'What share of your CI wall-clock is tests that the change couldn't possibly break — and who owns the flake backlog?'",
+    buyer: "VP Engineering / QA Lead / Platform",
+    scenario: "QA says full suites are non-negotiable; eng says they wait 45 minutes per PR. How do you sell selection + quarantine without sounding like 'skip tests'?",
+    d: `## Relay Test — confidence without the full suite every time
+Relay Test selects the tests statistically likely to catch bugs for a given change, quarantines flakes, and helps generate or heal coverage gaps. It is the quality layer that sits with Relay CI — not a reason to skip verification.
+
+## Flakes are a product problem, not a culture lecture
+Quarantine, ownership, and trend lines make flake debt visible. Teams often recover hours of weekly CI capacity once flaky offenders stop failing the mainline randomly.
+
+## AI that writes tests you can trust
+Generate missing unit and E2E coverage from changed code paths; self-heal brittle selectors so suites keep pace with UI churn.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Impact-based selection:** Run the subset of tests the change is likely to affect; keep full suites on main / nightly.
+
+**Flake quarantine:** Auto-detect flip-flops; park offenders with owners and SLAs.
+
+**AI test generation:** Propose unit and E2E cases for new or changed code.
+
+**Self-healing E2E:** Update brittle selectors when the UI drifts.
+
+**Coverage signals:** Surface gaps Relay Insights can treat as bottlenecks.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**CI:** Native stages in Relay CI; works with GitHub Actions / Jenkins as callers.
+
+**Frameworks:** JUnit, pytest, Jest, Playwright, Cypress, and common language runners.
+
+**SCM:** PR checks and annotations on GitHub / GitLab.
+
+**Quality dashboards:** Export suite health into Relay Insights.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We must run every test every time"** → Keep full suites on protected branches. Selection on PRs preserves flow without abandoning coverage.
+
+**"AI-generated tests are junk"** → Humans review; generation targets changed paths; quarantine still applies.
+
+**"Flakes are a people problem"** → Without product support they stay people problems forever. Make them owned backlog items.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- Eng leaders whose AI coding volume drowned CI
+- QA / quality eng measured on suite trust
+- Platform teams owning shared pipelines across many repos`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• What is flake rate on main this month?
+• How long for a full suite vs a PR suite?
+• Who decides when a flaky test is quarantined?
+• Do AI-generated PRs get the same suite rules as human ones?
+• Where does coverage actually drop after a rush release?`,
+      },
+    ],
+  },
+  {
+    id: "cd",
+    pillar: "deliver",
+    b: "CD",
+    e: "🚀",
+    c: A,
+    title: "Relay CD",
+    short: "Progressive delivery and GitOps — canary, blue/green, release verification, and automatic rollback.",
+    sa: "Ask: 'When a bad release hits prod, how long until you know — and how long until you're back on the last good version?'",
+    buyer: "VP Engineering / Platform / SRE Lead",
+    scenario: "A prospect says Argo CD 'works fine.' How do you probe for release verification, rollback, and multi-service release pain without dismissing GitOps?",
+    d: `## Relay CD — ship with a controlled blast radius
+Relay CD runs canary, blue/green, and rolling strategies across Kubernetes and traditional targets. Release verification watches real health signals and can roll back automatically when the change looks unhealthy.
+
+## GitOps without the maintenance tax
+Git remains the desired-state source. Relay manages edge runners, promotions, and approvals so platform teams aren't patching controllers at 2am.
+
+## Release orchestration for real systems
+Multi-service releases coordinate dependencies: if one service fails its gate, dependents hold. Teams often see fewer "works in staging" surprises once verification is continuous.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Strategies:** Canary, blue/green, rolling, custom traffic shaping.
+
+**Release verification:** Compare post-release metrics to baselines; auto-rollback.
+
+**GitOps:** PR-driven promotions, multi-cluster sync, ApplicationSet-style patterns.
+
+**Approvals & tickets:** Human gates plus Jira / ServiceNow change records.
+
+**DORA outs:** Deployment frequency and change-failure inputs for Relay Insights.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**Targets:** Kubernetes, ECS, serverless, VMs (SSH/WinRM), major clouds.
+
+**Manifests:** Helm, Kustomize, native YAML, Terraform-adjacent config.
+
+**Observability for health gates:** Datadog, Prometheus, New Relic, Dynatrace, CloudWatch, Splunk.
+
+**Artifacts:** Container registries and Relay Supply.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We use Argo / Spinnaker"** → Ask who maintains it and whether release verification + auto-rollback are first-class. Relay adds the intelligence layer on managed GitOps.
+
+**"GitHub Actions deploys for us"** → Fine for simple promote scripts. Progressive delivery and health gates are usually custom YAML debt.
+
+**"Rollback is rare"** → Until it isn't. Measure time-to-detect and time-to-revert on the last three incidents.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- Platform and SRE teams accountable for change failure rate
+- Orgs increasing release frequency after AI coding adoption
+- Regulated environments needing auditable progressive delivery`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• What's your change failure rate and MTTR after a bad release?
+• Is rollback automated or a runbook someone hopes to find?
+• How do you coordinate multi-service releases today?
+• Who maintains your GitOps controllers and how often do upgrades break?
+• What signals define a "healthy" release besides "pods are up"?`,
+      },
+    ],
+  },
+  {
+    id: "flags",
+    pillar: "deliver",
+    b: "Flags",
+    e: "🚩",
+    c: A,
+    title: "Relay Flags",
+    short: "Feature flags and experimentation — decouple deploy from release, progressive exposure, kill switches.",
+    sa: "Ask: 'Can you ship code to production dark and expose it to 1% of users — without a new deploy?'",
+    buyer: "VP Product / Eng Manager / Platform",
+    scenario: "Product wants faster experiments; eng fears Friday deploys. How do you show flags as the bridge between velocity and safety?",
+    d: `## Relay Flags — deploy continuously, release deliberately
+Relay Flags separates "code is in production" from "users can see it." Progressive rollouts, targeting rules, and instant kill switches reduce the risk of every release.
+
+## Experimentation without a side tool silo
+A/B tests and multivariate flags share the same governance as delivery — approvals, environments, and audit. Teams often see more experiments per sprint when flags are part of the platform, not a separate vendor island.
+
+## Safer shipping when change volume rises
+More code volume means more feature surface. Flags keep blast radius small while Relay CD and Relay Secure handle the pipeline.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Progressive exposure:** Percentage rollouts, rings, and attribute targeting.
+
+**Experimentation:** A/B assignments with metric hooks.
+
+**Kill switches:** Instant disable without rollback of the whole release.
+
+**SDK coverage:** Major languages and mobile; local evaluation options.
+
+**Governance:** Environment-scoped permissions and change history.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**Relay CD:** Flag state as part of release orchestration.
+
+**Analytics:** Export exposures to your warehouse / product analytics.
+
+**CI:** Smoke-test flag defaults in Relay CI.
+
+**Catalog:** Flag ownership tied to Relay Portal services.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We use LaunchDarkly / Flagsmith"** → Acknowledge strength. Position Relay Flags on platform economics and release+flag+verify in one workflow.
+
+**"Flags create tech debt"** → True without hygiene. Relay surfaces stale flags and owners via the catalog.
+
+**"Product doesn't need experiments"** → Kill switches and dark launches still pay for themselves on incident day.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- Product orgs running continuous discovery / experimentation
+- Platform teams standardising release safety
+- Mobile and multi-tenant SaaS needing targeted exposure`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• How do you dark-launch today?
+• What's the process to turn off a bad feature at 2am?
+• How many stale flags exist, and who cleans them?
+• Are experiments blocked on eng capacity to wire flags?
+• Do flags and releases share an audit story for compliance?`,
+      },
+    ],
+  },
+  {
     id: "infra",
-    pillar: "delivery",
-    b: "IaC",
+    pillar: "deliver",
+    b: "Infra",
     e: "🧱",
     c: WA,
     title: "Relay Infra",
@@ -519,7 +519,7 @@ Self-service workflows create repos, pipelines, and baseline configs in minutes.
     sa: "Ask: 'Before someone applies Terraform to prod, do you see blast radius and cost impact — or just hope the plan looks right?'",
     buyer: "Platform / Cloud Engineering / FinOps partner",
     scenario: "Cloud team says Terraform Cloud covers them. How do you probe for policy, cost-before-apply, and app+infra release coordination?",
-    d: `## Relay Infra — infrastructure changes with the same discipline as app deploys
+    d: `## Relay Infra — infrastructure changes with the same discipline as app releases
 Relay Infra runs Terraform and OpenTofu through governed pipelines: plan, policy check, cost estimate, approve, apply — with drift detection afterward.
 
 ## Close the app/infra gap
@@ -582,234 +582,163 @@ Policy-as-code and RBAC replace ad-hoc Slack approvals while keeping an audit tr
     ],
   },
   {
-    id: "sre",
-    pillar: "efficiency",
-    b: "Observe",
-    e: "🩺",
-    c: TL,
-    title: "Relay SRE",
-    short: "AI-assisted incident response — change correlation, runbooks, on-call context, post-incident writeups.",
-    sa: "Ask: 'When paging fires, how long to answer what changed in the last deploy, flag, or config?'",
-    buyer: "Head of SRE / VP Eng / Platform",
-    scenario: "They love their observability vendor. How do you position Relay SRE as change intelligence and action — not another metrics UI?",
-    d: `## Relay SRE — from alert to change to action
-Relay SRE correlates incidents to recent deploys, flag flips, and config changes, then suggests or runs runbooks. It sits above your existing metrics and logs — it does not try to replace them.
+    id: "data",
+    pillar: "deliver",
+    b: "Data",
+    e: "🗄️",
+    c: WA,
+    title: "Relay Data",
+    short: "Database change delivery — migrations in the pipeline, rollback-safe schema changes, and drift detection.",
+    sa: "Ask: 'How do schema changes reach production today — in the same train as the app, or as a separate DBA ticket?'",
+    buyer: "VP Engineering / DBA Lead / Platform",
+    scenario: "App teams can release daily but schema changes wait on a weekly DBA window. How do you open without attacking the DBA team?",
+    d: `## Relay Data — treat schema like code that can break prod
+Relay Data puts migrations into the delivery pipeline with review, policy checks, expand/contract patterns, and rollback plans. The goal is safer, more frequent database change — not cowboy applies from a laptop.
 
-## Shrink MTTR with context, not more dashboards
-On-call gets the likely diff, owning team, and last verification result in one place. Teams often cut time-to-mitigate when the first question ("what changed?") is already answered.
+## Expand / contract without weekend cutovers
+Support additive-first migrations, dual-write windows, and verified rollback scripts so releases aren't blocked on big-bang DDL.
 
-## Learning loop back into delivery
-Post-incident summaries feed Relay Insights and planning — so the same failure class is less likely next sprint.`,
+## Drift and ownership
+Detect schema drift against the desired migration history and attach owners from Relay Portal so orphan tables don't become tribal knowledge.`,
     sections: [
       {
         title: "⚙️ Capabilities",
         open: false,
-        content: `**Change correlation:** Link alerts to Relay Deploy, Flags, and Infra events.
+        content: `**Pipeline-native migrations:** Versioned DDL/DML as PR-reviewed artifacts.
 
-**Runbooks:** Guided and automated mitigation steps with approvals.
+**Expand / contract helpers:** Patterns for zero/near-zero downtime changes.
 
-**On-call context:** Service owners, dependencies, and recent scorecard health from Portal.
+**Policy gates:** Block destructive changes without dual approval.
 
-**Incident timeline:** Auto-assembled chronology for handoff and review.
+**Rollback packs:** Pair forward migrations with tested reverse scripts.
 
-**AI scribe:** Draft post-incident reports from the timeline for human edit.`,
+**Drift detection:** Compare live schema to migration history.`,
       },
       {
         title: "🔌 Integrations",
         open: false,
-        content: `**Observability:** Datadog, Prometheus, New Relic, Splunk, CloudWatch.
+        content: `**Engines:** PostgreSQL, MySQL, SQL Server, Oracle (common enterprise set).
 
-**Paging:** PagerDuty, Opsgenie, and similar.
+**CI/CD:** Relay CI builds migration packs; Relay CD applies with release verification.
 
-**Chat:** Slack / Teams incident channels.
+**Catalog:** Database services and owners in Relay Portal.
 
-**Delivery:** Deep links into Relay Deploy releases and Flags.`,
+**Secrets:** Cloud / Vault credentials for apply runners.`,
       },
       {
         title: "🛡️ Objections",
         open: false,
-        content: `**"Datadog / Grafana is our SRE tool"** → Keep them for telemetry. Relay SRE answers what changed and what to do next.
+        content: `**"DBAs must own every change"** → Keep DBA approval; automate packaging, review, and evidence so they aren't the bottleneck for copy-paste.
 
-**"AI will hallucinate remediations"** → Runbooks are curated; AI proposes, humans approve high-risk actions.
+**"Flyway / Liquibase is enough"** → Tools manage scripts; Relay Data governs them in the same control plane as app releases.
 
-**"We already have an incident tool"** → Ask how much manual timeline assembly still happens.`,
+**"Too risky for our core DB"** → Start with non-critical services; prove expand/contract + rollback, then widen.`,
       },
       {
         title: "🎯 Who buys",
         open: false,
-        content: `- SRE orgs measured on MTTR and toil reduction
-- Platform teams owning shared on-call for many services
-- Eng leaders after a painful Sev-1 wanting systemic fixes`,
+        content: `- Platform teams unifying app and data release trains
+- Eng leaders blocked by weekly schema windows
+- DBA leads who want auditability without becoming a ticket queue`,
       },
       {
         title: "💬 Discovery questions",
         open: false,
-        content: `• What's your MTTR for Sev-1 / Sev-2?
-• How do responders find the deploy that caused it?
-• What percentage of on-call time is toil vs novel work?
-• Are runbooks up to date and actually used?
-• How long to produce a blameless post-incident review?`,
+        content: `• How often do schema changes ship vs app changes?
+• What's the last schema-related incident and how was it rolled back?
+• Are migrations reviewed like application code?
+• Who can apply to prod today, and is it audited?
+• Do you detect drift between declared migrations and live schema?`,
       },
     ],
   },
   {
-    id: "cost",
-    pillar: "efficiency",
-    b: "FinOps",
-    e: "💰",
-    c: TL,
-    title: "Relay Cost",
-    short: "Cloud FinOps — spend visibility, idle resource control, rightsizing, and AI/token cost attribution.",
-    sa: "Ask: 'What percentage of non-prod spend runs 24/7 with nobody using it overnight?'",
-    buyer: "FinOps Lead / VP Eng / Cloud Platform",
-    scenario: "Finance escalates the cloud bill; eng says they lack ownership data. How do you open with visibility and idle waste — not a shame exercise?",
-    d: `## Relay Cost — make cloud spend an engineering signal
-Relay Cost attributes spend to teams, services, and pipelines, and highlights idle or oversized resources. Optional auto-stop for non-prod environments cuts obvious waste without ticket wars.
+    id: "secure",
+    pillar: "protect",
+    b: "Secure",
+    e: "🛡️",
+    c: ER,
+    title: "Relay Secure",
+    short: "DevSecOps orchestration — SAST, SCA, containers, secrets, and policy-as-code with noise reduction.",
+    sa: "Ask: 'When a critical CVE lands, how long until the owning team has a reachable, prioritised fix list — not a PDF?'",
+    buyer: "CISO / AppSec Lead / Platform Security",
+    scenario: "Security says scanners are 'deployed' but developers ignore the queue. How do you reframe from more findings to fewer actionable ones in the PR?",
+    d: `## Relay Secure — security that developers will act on
+Relay Secure orchestrates multiple scanner types in the pipeline, deduplicates findings, and ranks by reachability and exploitability so the backlog is work — not noise. Scope is pipeline and supply-chain security — not runtime WAF/WAAP.
 
-## Rightsizing with owners attached
-Recommendations land with the service owner from Relay Portal — not a spreadsheet nobody claims. Teams often reclaim meaningful non-prod spend within a month of enforcing schedules.
+## Policy-as-code at merge and promote
+OPA-style gates encode org rules: block criticals on main, require attestations before prod, enforce licence policy. Exceptions are explicit and auditable.
 
-## AI workload awareness
-As inference and build minutes rise, Cost tracks those lines next to classic cloud IaaS so FinOps and platform share one conversation.`,
+## Shift left without a separate ticket queue
+Findings appear on the PR with owner context. Teams often see faster remediation when feedback arrives in the same place as the code change.`,
     sections: [
       {
         title: "⚙️ Capabilities",
         open: false,
-        content: `**Multi-cloud visibility:** AWS, Azure, GCP normalised views.
+        content: `**Scanner orchestration:** SAST, SCA, container, secrets, IaC — unified results.
 
-**Idle control:** Schedules / auto-stop for dev and test.
+**Dedup & ranking:** Collapse duplicate CVEs; prioritise reachable paths.
 
-**Rightsizing:** Recommendations with one-click or PR workflows.
+**Policy-as-code:** Mandatory gates per environment with break-glass workflow.
 
-**Attribution:** Cost by team, service, pipeline, and environment.
+**Developer UX:** Inline PR annotations and fix guidance.
 
-**Budgets & alerts:** Thresholds before month-end surprises.`,
+**Audit trail:** Who waived what, when, and why.`,
       },
       {
         title: "🔌 Integrations",
         open: false,
-        content: `**Cloud billing:** Native cost APIs and CUR-style exports.
+        content: `**Scanners:** Bring existing commercial and open-source scanners; Relay normalises output.
 
-**Catalog:** Relay Portal ownership for chargeback / showback.
+**SCM:** Native PR checks on GitHub / GitLab / Bitbucket.
 
-**IaC:** Relay Infra cost estimates before apply.
+**Ticketing:** Optional Jira / ServiceNow defect creation for criticals.
 
-**CI:** Build-minute and runner spend alongside cloud IaaS.`,
+**Runtime handoff:** Feeds Relay CD gates and Relay Supply attestations.`,
       },
       {
         title: "🛡️ Objections",
         open: false,
-        content: `**"We have native cost explorers"** → Explorers show invoices. Cost ties spend to services and automates idle non-prod.
+        content: `**"We already have Snyk / Checkmarx"** → Keep licences. Secure orchestrates and prioritises across tools so AppSec isn't a PDF factory.
 
-**"Auto-stop will break developers"** → Start with shared non-prod; wake-on-demand; exclude sticky environments.
+**"Security gates slow us down"** → Unprioritised queues slow you more. Reachability-ranked gates unblock safe changes faster.
 
-**"FinOps owns this, not eng"** → Without eng ownership tags, FinOps can't act. Portal + Cost closes that loop.`,
+**"What about runtime / API protection?"** → Adjacent — keep your WAF/WAAP. Relay Secure covers the delivery path into prod.`,
       },
       {
         title: "🎯 Who buys",
         open: false,
-        content: `- FinOps and cloud centre-of-excellence teams
-- Platform leaders under margin pressure
-- Orgs with sprawling non-prod estates`,
+        content: `- AppSec leaders drowning in false positives
+- Platform teams embedding security into golden paths
+- Regulated industries needing auditable policy enforcement`,
       },
       {
         title: "💬 Discovery questions",
         open: false,
-        content: `• Can you attribute last month's bill to owning teams cleanly?
-• What runs 24/7 that is only needed business hours?
-• How do rightsizing tickets get resolved today?
-• Are AI/build costs visible next to classic cloud spend?
-• Who gets paged when a budget blows?`,
-      },
-    ],
-  },
-  {
-    id: "insights",
-    pillar: "efficiency",
-    b: "Insights",
-    e: "📊",
-    c: TL,
-    title: "Relay Insights",
-    short: "Engineering insights — DORA, bottlenecks, AI adoption signals, and delivery efficiency across tools.",
-    sa: "Ask: 'Where does a typical story lose the most calendar time — coding, review, CI, security, or release?'",
-    buyer: "VP Engineering / Director of DevEx",
-    scenario: "A VPE has vanity dashboards but can't name the top bottleneck. How do you sell bottleneck truth over more metrics?",
-    d: `## Relay Insights — see the constraint, not just the charts
-Relay Insights aggregates DORA and flow metrics across SCM, CI, security, and deploy systems to show where work waits. The point is prioritisation: fix the constraint that unlocks throughput.
-
-## Close the plan ↔ delivery loop
-Bottleneck data feeds Relay Plans and sprint conversations so commitments match reality. Teams often improve predictability once review lag or flaky CI is quantified.
-
-## AI coding without blind spots
-Track whether AI-assisted changes move faster through the outer loop — or stack up in review and security — so investment decisions are evidence-based.`,
-    sections: [
-      {
-        title: "⚙️ Capabilities",
-        open: false,
-        content: `**DORA & flow:** Deploy frequency, lead time, CFR, MTTR, wait stages.
-
-**Bottleneck finder:** Rank stages by wait time and variance.
-
-**Team & service views:** Filter by Portal ownership trees.
-
-**AI adoption lenses:** Compare AI-touched vs traditional changes (privacy-aware).
-
-**Natural-language asks:** "Which teams have review lag > 2 days?" style queries.`,
-      },
-      {
-        title: "🔌 Integrations",
-        open: false,
-        content: `**SCM:** GitHub, GitLab, Bitbucket PR and review data.
-
-**CI/CD:** Relay Build / Deploy plus common external CI.
-
-**Security & incidents:** Relay Secure and Relay SRE events.
-
-**Work tracking:** Jira / Linear cycle linkage for Plans.`,
-      },
-      {
-        title: "🛡️ Objections",
-        open: false,
-        content: `**"We already have a metrics product"** → Ask if it spans security and deploy wait times or only git. Insights is delivery-system-aware.
-
-**"Developers hate being measured"** → Measure systems and bottlenecks, not individuals; publish team-level flow.
-
-**"DORA is enough"** → DORA says elite/low; Insights says which queue to fix first.`,
-      },
-      {
-        title: "🎯 Who buys",
-        open: false,
-        content: `- VPE / DevEx investing in productivity programmes
-- Platform teams proving ROI of golden paths
-- Transformation offices needing evidence over anecdotes`,
-      },
-      {
-        title: "💬 Discovery questions",
-        open: false,
-        content: `• What's your lead time for a typical change?
-• Where does work wait the longest in your SDLC?
-• Do planning meetings use delivery data or intuition?
-• How do you know AI coding tools improved throughput end-to-end?
-• Which bottleneck would you fix first if you had proof?`,
+        content: `• What's your mean time to remediate critical CVEs?
+• What percentage of scanner findings are ever fixed?
+• Are security checks on every PR or only nightly?
+• How do you prove an artifact met policy before prod?
+• Who owns waivers and how are they reviewed?`,
       },
     ],
   },
   {
     id: "supply",
-    pillar: "security",
+    pillar: "protect",
     b: "Supply",
     e: "📦",
     c: ER,
     title: "Relay Supply",
-    short: "Artifact registry lite + supply-chain provenance — SBOMs, attestations, and promotion policies.",
+    short: "Artifact registry + supply-chain provenance — SBOMs, attestations, and promotion policies.",
     sa: "Ask: 'Can you prove what went into the container running in prod — and that it wasn't tampered with after build?'",
     buyer: "AppSec / Platform / Compliance",
     scenario: "Compliance asks for SBOMs; eng produces them manually for audits. How do you make provenance continuous in the pipeline?",
     d: `## Relay Supply — trust the artifact, not the hope
 Relay Supply stores build outputs and attaches SBOM and attestation metadata as first-class companions to every artifact. Promotion policies ensure only signed, scanned builds reach higher environments.
 
-## Lightweight registry, strong provenance
-Not a replacement for every enterprise registry — a governance-friendly path that works with existing ECR/Artifactory/GHCR while enforcing Relay Secure and Deploy gates.
+## Registry with strong provenance
+Works with existing ECR/Artifactory/GHCR while enforcing Relay Secure and Relay CD gates — or acts as the governed path for teams consolidating.
 
 ## Audit readiness without fire drills
 Teams often turn supply-chain asks from quarterly scrambles into automatic pipeline output.`,
@@ -830,11 +759,11 @@ Teams often turn supply-chain asks from quarterly scrambles into automatic pipel
       {
         title: "🔌 Integrations",
         open: false,
-        content: `**CI:** Relay Build publishes digests automatically.
+        content: `**CI:** Relay CI publishes digests automatically.
 
 **External registries:** Mirror / promote with ECR, GHCR, Artifactory, Nexus.
 
-**Deploy:** Relay Deploy pulls only policy-cleared digests.
+**CD:** Relay CD pulls only policy-cleared digests.
 
 **Compliance export:** SBOM packages for customer and auditor requests.`,
       },
@@ -862,6 +791,219 @@ Teams often turn supply-chain asks from quarterly scrambles into automatic pipel
 • How do you prevent an unsigned image from reaching prod?
 • Can you map a running pod back to commit + pipeline run?
 • What supply-chain questions do customers ask in questionnaires?`,
+      },
+    ],
+  },
+  {
+    id: "sre",
+    pillar: "operate",
+    b: "SRE",
+    e: "🩺",
+    c: TL,
+    title: "Relay SRE",
+    short: "Incident response, change correlation, runbooks, post-incident writeups, and reliability experiments.",
+    sa: "Ask: 'When paging fires, how long to answer what changed in the last release, flag, or config?'",
+    buyer: "Head of SRE / VP Eng / Platform",
+    scenario: "They love their observability vendor. How do you position Relay SRE as change intelligence and action — not another metrics UI?",
+    d: `## Relay SRE — from alert to change to action
+Relay SRE correlates incidents to recent releases, flag flips, and config changes, then suggests or runs runbooks. It sits above your existing metrics and logs — it does not try to replace them.
+
+## Shrink MTTR with context, not more dashboards
+On-call gets the likely diff, owning team, and last verification result in one place. Teams often cut time-to-mitigate when the first question ("what changed?") is already answered.
+
+## Reliability experiments, then learning
+Controlled failure experiments (chaos-style) prove that alerts, runbooks, and rollback paths work — before customers do. Incident recaps feed Relay Insights so the same failure class is less likely next sprint.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Change correlation:** Link alerts to Relay CD, Flags, Infra, and Data events.
+
+**Runbooks:** Guided and automated mitigation steps with approvals.
+
+**On-call context:** Service owners, dependencies, and recent scorecard health from Portal.
+
+**Incident timeline & recap:** Auto-assembled chronology; draft post-incident reports for human edit.
+
+**Reliability experiments:** Controlled failure injection with blast-radius limits and GameDay-style runs.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**Observability:** Datadog, Prometheus, New Relic, Splunk, CloudWatch.
+
+**Paging:** PagerDuty, Opsgenie, and similar.
+
+**Chat:** Slack / Teams incident channels.
+
+**Delivery:** Deep links into Relay CD releases and Flags.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"Datadog / Grafana is our SRE tool"** → Keep them for telemetry. Relay SRE answers what changed and what to do next.
+
+**"AI will hallucinate remediations"** → Runbooks are curated; AI proposes, humans approve high-risk actions.
+
+**"We already bought chaos tooling"** → Keep specialist tools if needed; Relay SRE ties experiments to the same change and ownership graph as incidents.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- SRE orgs measured on MTTR and toil reduction
+- Platform teams owning shared on-call for many services
+- Eng leaders after a painful Sev-1 wanting systemic fixes`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• What's your MTTR for Sev-1 / Sev-2?
+• How do responders find the release that caused it?
+• What percentage of on-call time is toil vs novel work?
+• Are runbooks up to date and actually used?
+• When did you last prove rollback works with a controlled experiment?`,
+      },
+    ],
+  },
+  {
+    id: "cost",
+    pillar: "operate",
+    b: "FinOps",
+    e: "💰",
+    c: TL,
+    title: "Relay Cost",
+    short: "Cloud FinOps — spend visibility, idle shutdown schedules, rightsizing, and AI/token cost attribution.",
+    sa: "Ask: 'What percentage of non-prod spend runs 24/7 with nobody using it overnight?'",
+    buyer: "FinOps Lead / VP Eng / Cloud Platform",
+    scenario: "Finance escalates the cloud bill; eng says they lack ownership data. How do you open with visibility and idle waste — not a shame exercise?",
+    d: `## Relay Cost — make cloud spend an engineering signal
+Relay Cost attributes spend to teams, services, and pipelines, and highlights idle or oversized resources. Idle shutdown schedules for non-prod environments cut obvious waste without ticket wars.
+
+## Rightsizing with owners attached
+Recommendations land with the service owner from Relay Portal — not a spreadsheet nobody claims. Teams often reclaim meaningful non-prod spend within a month of enforcing schedules.
+
+## AI workload awareness
+As inference and build minutes rise, Cost tracks those lines next to classic cloud IaaS so FinOps and platform share one conversation.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**Multi-cloud visibility:** AWS, Azure, GCP normalised views.
+
+**Idle shutdown schedules:** Schedules for dev and test; wake-on-demand options.
+
+**Rightsizing:** Recommendations with one-click or PR workflows.
+
+**Attribution:** Cost by team, service, pipeline, and environment.
+
+**Budgets & alerts:** Thresholds before month-end surprises.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**Cloud billing:** Native cost APIs and CUR-style exports.
+
+**Catalog:** Relay Portal ownership for chargeback / showback.
+
+**IaC:** Relay Infra cost estimates before apply.
+
+**CI:** Build-minute and runner spend alongside cloud IaaS.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We have native cost explorers"** → Explorers show invoices. Cost ties spend to services and automates idle non-prod.
+
+**"Schedules will break developers"** → Start with shared non-prod; wake-on-demand; exclude sticky environments.
+
+**"FinOps owns this, not eng"** → Without eng ownership tags, FinOps can't act. Portal + Cost closes that gap.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- FinOps and cloud centre-of-excellence teams
+- Platform leaders under margin pressure
+- Orgs with sprawling non-prod estates`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• Can you attribute last month's bill to owning teams cleanly?
+• What runs 24/7 that is only needed business hours?
+• How do rightsizing tickets get resolved today?
+• Are AI/build costs visible next to classic cloud spend?
+• Who gets paged when a budget blows?`,
+      },
+    ],
+  },
+  {
+    id: "insights",
+    pillar: "operate",
+    b: "Insights",
+    e: "📊",
+    c: TL,
+    title: "Relay Insights",
+    short: "Engineering insights — DORA, bottlenecks, AI adoption signals, and delivery efficiency across tools.",
+    sa: "Ask: 'Where does a typical story lose the most calendar time — coding, review, CI, security, or release?'",
+    buyer: "VP Engineering / Director of DevEx",
+    scenario: "A VPE has vanity dashboards but can't name the top bottleneck. How do you sell bottleneck truth over more metrics?",
+    d: `## Relay Insights — see the constraint, not just the charts
+Relay Insights aggregates DORA and flow metrics across SCM, CI, security, and release systems to show where work waits. The point is prioritisation: fix the constraint that unlocks throughput.
+
+## Close the plan ↔ delivery feedback
+Bottleneck data feeds Relay Plans and sprint conversations so commitments match reality. Teams often improve predictability once review lag or flaky CI is quantified.
+
+## AI coding without blind spots
+Track whether AI-assisted changes move faster through the whole stream — or stack up in review and security — so investment decisions are evidence-based.`,
+    sections: [
+      {
+        title: "⚙️ Capabilities",
+        open: false,
+        content: `**DORA & flow:** Deploy frequency, lead time, CFR, MTTR, wait stages.
+
+**Bottleneck finder:** Rank stages by wait time and variance.
+
+**Team & service views:** Filter by Portal ownership trees.
+
+**AI adoption lenses:** Compare AI-touched vs traditional changes (privacy-aware).
+
+**Natural-language asks:** "Which teams have review lag > 2 days?" style queries.`,
+      },
+      {
+        title: "🔌 Integrations",
+        open: false,
+        content: `**SCM:** GitHub, GitLab, Bitbucket PR and review data.
+
+**CI/CD:** Relay CI / Relay CD plus common external CI.
+
+**Security & incidents:** Relay Secure and Relay SRE events.
+
+**Work tracking:** Jira / Linear cycle linkage for Plans.`,
+      },
+      {
+        title: "🛡️ Objections",
+        open: false,
+        content: `**"We already have a metrics product"** → Ask if it spans security and release wait times or only git. Insights is delivery-system-aware.
+
+**"Developers hate being measured"** → Measure systems and bottlenecks, not individuals; publish team-level flow.
+
+**"DORA is enough"** → DORA says elite/low; Insights says which queue to fix first.`,
+      },
+      {
+        title: "🎯 Who buys",
+        open: false,
+        content: `- VPE / DevEx investing in productivity programmes
+- Platform teams proving ROI of golden paths
+- Transformation offices needing evidence over anecdotes`,
+      },
+      {
+        title: "💬 Discovery questions",
+        open: false,
+        content: `• What's your lead time for a typical change?
+• Where does work wait the longest in your SDLC?
+• Do planning meetings use delivery data or intuition?
+• How do you know AI coding tools improved throughput end-to-end?
+• Which bottleneck would you fix first if you had proof?`,
       },
     ],
   },

@@ -8,7 +8,7 @@ export const RELAY_AI: {
 } = {
   platform: [
     {
-      id: "rai-chimera",
+      id: "rai-relay-ai",
       e: "🔮",
       c: A,
       title: "Relay AI",
@@ -48,7 +48,7 @@ The Delivery Graph is the retrieval backbone behind Relay AI. It indexes an orga
 ## What this enables
 - A developer asking "why does this service fail on Fridays?" gets an answer citing last month's incident post-mortem and the cron job that runs on Thursday nights.
 - A code review agent flags a pattern that caused a production incident in a different service six months ago.
-- A deployment agent references the runbook for the target environment's specific constraints.`,
+- A release agent (Conductor) references the runbook for the target environment's specific constraints.`,
       sections: [
         { title: "📐 Index scope", content: "Configurable per-org: which repos, doc sources, and telemetry streams to include. Sensitive repos can be excluded or access-controlled." },
         { title: "⚡ Freshness", content: "Incremental re-indexing on every push, deploy, or incident event. Full reindex runs nightly as a consistency check." },

@@ -4,8 +4,8 @@
 
 A sales enablement hub for the **Relay** GTM organisation. Relay is a fictional full-SDLC delivery platform. The app helps SDRs, AEs, and GTM teammates learn and practise on:
 
-- Relay platform modules (organised by value pillars + Chimera AI)
-- The software delivery lifecycle (inner Plan/Code loop vs outer Build→Optimise loop)
+- Relay platform modules (organised by value pillars + Relay AI)
+- The software delivery lifecycle as one value stream (Plan → Improve) — constraint-first, not loop-based
 - Buyer personas and how to approach each
 - Public-source account briefs (hypotheses labelled)
 - Competitive landscape cards
@@ -43,17 +43,19 @@ Auto-enables when Turso + Voyage env vars are present; otherwise basic single-ca
 
 - Relay is fictional — do not invent real customer relationships or private deal facts
 - Account briefs: public sources only; hypotheses stay labelled
+- Follow [`docs/NAMING.md`](docs/NAMING.md) for module and capability names
 - Never commit `.env.local`
-- Before content commits: `npm run check:sensitive` and `npm run check:glossary`
+- Before content commits: `npm run check:naming`, `npm run check:sensitive`, and `npm run check:glossary`
 
 ## Commands
 
 ```bash
 npm run dev              # http://localhost:5173
 npm run build
+npm run check:naming
 npm run check:glossary
 npm run check:sensitive
 npm run seed              # requires Turso + Voyage keys
 ```
 
-See `README.md` for setup detail and `ROADMAP.md` for what's next.
+See `README.md` for setup detail, `docs/NAMING.md` for product names, and `ROADMAP.md` for what's next.
