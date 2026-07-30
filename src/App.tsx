@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { A, TL, BG, CD, C2, BO, TX, MU, SU, WA, ER } from "./colors";
-import type { ItemSection, Item, Message, ProgMap } from "./types";
-import { PILLARS, MODS, ARCH, PERSONAS, COMPS, DISC, RELAY_AI, SDLC_STAGES, SDLC_INTRO, GLOSSARY, GLOSSARY_LOOKUP, SAMPLE_CALL_TRANSCRIPT } from "./data";
+import type { ItemSection, Item, Message, ProgMap, ObjectionCard, ObjectionTheme, LandRiskTheme } from "./types";
+import { PILLARS, MODS, ARCH, PERSONAS, COMPS, DISC, RELAY_AI, SDLC_STAGES, SDLC_INTRO, GLOSSARY, GLOSSARY_LOOKUP, SAMPLE_CALL_TRANSCRIPT, DISCOVERY_PATHS, LAND_TOOLCHAIN, LAND_PROOF_TEMPLATES, OBJECTIONS } from "./data";
 
 // Sorted glossary keys longest-first so multi-word terms match before single words
 const GKEYS=Object.keys(GLOSSARY_LOOKUP).sort((a,b)=>b.length-a.length);
@@ -184,7 +184,7 @@ function Accordion({sections}:{sections:ItemSection[]}){
   );
 }
 
-type ChatMode="module"|"sdlc"|"persona"|"competitive"|"concept";
+type ChatMode="module"|"sdlc"|"persona"|"competitive"|"concept"|"objection";
 function Modal({item,prog,onClose,onChat,onOpenItem,mode="module"}:{item:Item,prog:ProgMap,onClose:()=>void,onChat:(item:Item,mode:ChatMode)=>void,onOpenItem:(item:Item)=>void,mode?:ChatMode}){
   const title=item.title||item.n||item.co||"";
   const p=prog[item.id];
@@ -262,7 +262,7 @@ function Modal({item,prog,onClose,onChat,onOpenItem,mode="module"}:{item:Item,pr
           </div>
         )}
         <button onClick={()=>onChat(item,mode)} style={{width:"100%",background:`linear-gradient(135deg,${A},${TL})`,color:BG,border:"none",borderRadius:8,padding:"11px",fontWeight:700,fontSize:14,cursor:"pointer",marginTop:2}}>
-          🧠 {p?.chatHistory?"Continue →":mode==="persona"?"Start Roleplay →":mode==="competitive"?"Practice Objection →":mode==="concept"?"Explore Concept →":"Start Deep Dive →"}
+          🧠 {p?.chatHistory?"Continue →":mode==="persona"?"Start Roleplay →":mode==="competitive"?"Practice Objection →":mode==="concept"?"Explore Concept →":mode==="objection"?"Practice with AI →":"Start Deep Dive →"}
         </button>
       </div>
     </div>
@@ -326,6 +326,17 @@ export default function App(){
   const[bookmarks,setBookmarks]=useState<Set<string>>(new Set());
   const[showBookmarks,setShowBookmarks]=useState(false);
   const[slackCopied,setSlackCopied]=useState(false);
+  const[discMode,setDiscMode]=useState<"browse"|"path">("browse");
+  const[pathStageId,setPathStageId]=useState<string>("release");
+  const[pathStep,setPathStep]=useState(0);
+  const[landConstraint,setLandConstraint]=useState<string>("");
+  const[landPersonas,setLandPersonas]=useState<string[]>([]);
+  const[landToolchain,setLandToolchain]=useState<Set<string>>(new Set());
+  const[landRisk,setLandRisk]=useState<LandRiskTheme>("already_have_x");
+  const[landBriefCopied,setLandBriefCopied]=useState(false);
+  const[objTheme,setObjTheme]=useState<ObjectionTheme|"all">("all");
+  const[objPersona,setObjPersona]=useState<string>("all");
+  const[objActiveId,setObjActiveId]=useState<string|null>(null);
 
   _setGPopover=setGPopover;
   _glossEnabled=glossEnabled;
@@ -344,7 +355,7 @@ export default function App(){
     "relay cost":"cost","relay insights":"insights",
   };
   // Tab indices for new IA (must match TABS order below)
-  const STAB_MAP:{[k:string]:number}={sdlc:2,architecture:1,solutions:1,personas:3,competitive:4,discovery:5,glossary:6,calls:7,progress:8,settings:9,methodology:9};
+  const STAB_MAP:{[k:string]:number}={sdlc:2,architecture:1,solutions:1,personas:3,competitive:4,discovery:5,land:6,"land planner":6,objection:7,"objection gym":7,glossary:8,calls:9,progress:10,settings:11,methodology:11};
   const STAGE_IDS=new Set(["plan","code","build","test","secure","release","operate","improve"]);
 
   const openModByName=(name:string)=>{
@@ -429,12 +440,22 @@ export default function App(){
   useEffect(()=>{if(!currentCallId)setCallType(defaultCallType);},[defaultCallType]);
   useEffect(()=>{if(msgsRef.current)msgsRef.current.scrollTop=msgsRef.current.scrollHeight;},[chat?.messages?.length,loading]);
   useEffect(()=>{if(callMsgsRef.current)callMsgsRef.current.scrollTop=callMsgsRef.current.scrollHeight;},[callMsgs.length,callLoading]);
+  useEffect(()=>{
+    try{const v=sessionStorage.getItem("signalHubLandConstraint");if(v){setLandConstraint(v);sessionStorage.removeItem("signalHubLandConstraint");}}catch{}
+  },[]);
+
+  const goLandPlanner=(stageId:string)=>{
+    setLandConstraint(stageId);
+    try{sessionStorage.setItem("signalHubLandConstraint",stageId);}catch{}
+    setTab(6);
+  };
 
   const openChat=(item:Item,mode:ChatMode="module")=>{
     const id=item.id;
     const prev=prog[id]?.chatHistory;
     const title=String(item.title||item.n||item.co||"this topic");
     const opener=prev?`Picking up from your previous session on **${title}**. Where do you want to go from here?`:
+      mode==="objection"?`Let's drill this objection: **"${title}"**\n\nBefore I show you anything, answer it in your own words — how would you respond if a buyer said that to you right now? (There are traps in common answers — I'll flag them after you go first.)`:
       mode==="sdlc"?`Let's dig into the **${title}** stage of the SDLC.\n\n**Start here:** In your own words, what do you think actually happens during this stage? Don't worry about Relay yet — just tell me what you know (or think you know) about this part of software delivery. There are no wrong answers.`:
       mode==="concept"?`Let's build your understanding of **${title}** — not to pitch it, but so you can speak to it confidently when it comes up.\n\n**Start here:** In your own words, what does **${title}** actually do or mean within the Relay platform? Just your current understanding — no sales framing needed.`:
       mode==="persona"?(()=>{
@@ -483,7 +504,21 @@ export default function App(){
       const masterySignal=`
 
 MASTERY SIGNAL: When the rep has demonstrated they can articulate the core value proposition AND at least one defensible differentiator without being prompted — set a high bar, not just progress or a reasonable answer — include [MASTERY_UNLOCKED] on its own line at the very end of your response. If in doubt, don't signal. Use at most once per session, after at least 3 substantive exchanges.`;
-      const sys=mode==="concept"?
+      const sys=mode==="objection"?
+`You are a Relay sales coach scoring objection handling. The rep is practising a real buyer objection.
+
+Objection: ${chat.topic.title}
+${chat.topic.d||""}
+Strong answer reference: ${chat.topic.sa||""}
+
+Coaching flow:
+- Ask the rep to respond in their own words first. Do NOT give the answer before they try.
+- After they respond, score 1-5 on four dimensions: (1) Reframe without trash-talking the incumbent, (2) Coexist / honesty on toolchain, (3) Constraint-focus (lands the pain before pitching modules), (4) Next question or logical bridge.
+- Name the traps they fell into (if any) before acknowledging what worked.
+- Only after 2+ rep attempts, share the strong answer and coach tips from the reference above.
+- Keep Socratic or direct per the coaching style already appended. Never invent customer names or win rates.
+- Follow NAMING.md rules: use only canonical Relay module names.${masterySignal}`:
+      mode==="concept"?
 `You are a Relay platform educator helping a sales rep build genuine understanding of a platform concept or capability. Your goal is platform literacy — help them understand what this is and why it matters, not how to sell it.
 
 Concept: ${chat.topic.title}
@@ -744,7 +779,9 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
     ARCH.forEach(m=>{if(hit(m.title,m.short,m.d,m.sa))add("Architecture",m.title||"",(m.short||m.d||"").slice(0,80),m.e||"⚙️",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
     PERSONAS.forEach(m=>{if(hit(m.title,m.n?.toString(),m.role,m.short,m.d,m.str,m.sa))add("Personas",m.title||m.n?.toString()||"",m.role||"","👤",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
     COMPS.forEach(m=>{if(hit(m.n?.toString(),m.co,m.str,m.adv,m.wo,m.d))add("Competitive",m.n?.toString()||m.co||"",(m.str||"").slice(0,80),"⚔️",()=>{setShowSearch(false);setModal(m);save({...prog,[m.id]:{...(prog[m.id]||{}),visited:true,lastVisit:Date.now()}});});});
-    for(const cat of GLOSSARY){for(const t of cat.terms){if((out["Glossary"]?.length||0)>=6)break;if(t.term.toLowerCase().includes(lo)||t.def.toLowerCase().includes(lo))add("Glossary",t.term,t.def.slice(0,80),"📖",()=>{setShowSearch(false);setTab(6);setGlossarySearch(t.term);});}}
+    DISCOVERY_PATHS.forEach(p=>{if(hit(p.title,...p.steps.map(s=>s.prompt)))add("Discovery Paths",p.title,p.steps[0]?.prompt.slice(0,80)||"",p.e,()=>{setShowSearch(false);setTab(5);setDiscMode("path");setPathStageId(p.stageId);setPathStep(0);});});
+    OBJECTIONS.forEach(o=>{if(hit(o.title,o.strongAnswer,o.coachTips,o.trap))add("Objection Gym",o.title,(o.trap||"").slice(0,80),o.e,()=>{setShowSearch(false);setTab(7);setObjActiveId(o.id);});});
+    for(const cat of GLOSSARY){for(const t of cat.terms){if((out["Glossary"]?.length||0)>=6)break;if(t.term.toLowerCase().includes(lo)||t.def.toLowerCase().includes(lo))add("Glossary",t.term,t.def.slice(0,80),"📖",()=>{setShowSearch(false);setTab(8);setGlossarySearch(t.term);});}}
     return out;
   };
 
@@ -802,13 +839,15 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
   });
 
   const DISC_ITEMS:Item[]=DISC.map((g,gi)=>({id:`disc-${gi}`,title:g.title,e:"🔍"}));
-  const allItems:Item[]=[...MODS,...ARCH,...PERSONAS,...COMPS,...DISC_ITEMS];
+  const PATH_ITEMS:Item[]=DISCOVERY_PATHS.map(p=>({id:`path-${p.stageId}`,title:p.title,e:p.e}));
+  const OBJ_ITEMS:Item[]=OBJECTIONS.map(o=>({id:o.id,title:o.title,e:o.e}));
+  const allItems:Item[]=[...MODS,...ARCH,...PERSONAS,...COMPS,...DISC_ITEMS,...PATH_ITEMS,...OBJ_ITEMS];
   const visited=allItems.filter(it=>tierOf(prog[it.id])!=="none").length;
   const practicedCount=allItems.filter(it=>tierOf(prog[it.id])==="practiced").length;
   const mastered=allItems.filter(it=>tierOf(prog[it.id])==="mastered").length;
   const pct=Math.round((visited/allItems.length)*100);
 
-  const TABS=["🏠 Dashboard","🧩 Solutions","🔄 SDLC","👥 Personas","⚔️ Competitive","🔍 Discovery","📖 Glossary","📞 Calls","🎯 Progress","⚙️ Settings"];
+  const TABS=["🏠 Dashboard","🧩 Solutions","🔄 SDLC","👥 Personas","⚔️ Competitive","🔍 Discovery","🗺️ Land Planner","🥊 Objection Gym","📖 Glossary","📞 Calls","🎯 Progress","⚙️ Settings"];
 
   return(
     <div style={{minHeight:"100vh",background:BG,color:TX,fontFamily:"Inter,system-ui,sans-serif",fontSize:14,opacity:loaded?1:0,transition:"opacity .2s"}}>
@@ -872,8 +911,8 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
               {[
                 {title:"Explore SDLC Map",sub:"Walk the full software delivery value stream and find where work waits.",e:"🔄",tab:2,c:A},
                 {title:"Browse Solutions",sub:"Four value pillars powered by Relay AI — explore every module.",e:"🧩",tab:1,c:TL},
-                {title:"Meet the Personas",sub:"Buyer personas for the full committee — discovery tactics and roleplay.",e:"👥",tab:3,c:WA},
-                {title:"Paste a Call",sub:"AI analysis of your transcript — fit, sentiment, pain points, next steps.",e:"📞",tab:7,c:SU},
+                {title:"Land Planner",sub:"Wedge → toolchain honesty → proof ladder. Build a scoped land narrative.",e:"🗺️",tab:6,c:WA},
+                {title:"Paste a Call",sub:"AI analysis of your transcript — fit, sentiment, pain points, next steps.",e:"📞",tab:9,c:SU},
               ].map((cta,i)=>(
                 <div key={i} onClick={()=>setTab(cta.tab)}
                   style={{background:CD,border:`1px solid ${cta.c}33`,borderRadius:10,padding:"16px 18px",cursor:"pointer",transition:"all .2s"}}
@@ -894,7 +933,7 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
                   {n:"1",t:"Start with the SDLC map","d":"Walk the value stream. Find where work waits — that stage is the wedge."},
                   {n:"2",t:"Open Solutions / Relay AI","d":"Learn the modules that sit on that constraint."},
                   {n:"3",t:"Study the buyer persona","d":"How that persona thinks about the constraint and what good sounds like."},
-                  {n:"4",t:"Practise discovery or a call","d":"Discovery tab for questions; Calls tab to analyse a transcript."},
+                  {n:"4",t:"Practise objections or a call","d":"Objection Gym for hard pushes; Calls for transcripts."},
                 ].map((step,i)=>(
                   <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                     <div style={{width:22,height:22,borderRadius:99,background:A,color:BG,fontWeight:700,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>{step.n}</div>
@@ -916,7 +955,7 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
                 <div style={{width:100,background:BO,borderRadius:99,height:5,overflow:"hidden"}}>
                   <div style={{width:`${pct}%`,height:"100%",background:`linear-gradient(90deg,${A},${TL})`}}/>
                 </div>
-                <button onClick={()=>setTab(8)} style={{background:"none",border:`1px solid ${BO}`,borderRadius:7,padding:"5px 11px",fontSize:11,color:MU,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>View progress →</button>
+                <button onClick={()=>setTab(10)} style={{background:"none",border:`1px solid ${BO}`,borderRadius:7,padding:"5px 11px",fontSize:11,color:MU,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>View progress →</button>
               </div>
             )}
           </div>
@@ -1191,44 +1230,397 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
         })()}
 
         {/* ── tab 5: Discovery ──────────────────────────────────────────── */}
-        {tab===5&&(
+        {tab===5&&(()=>{
+          const STAGE_ORDER=["plan","code","build","test","secure","release","operate","improve"];
+          const discPath=DISCOVERY_PATHS.find(p=>p.stageId===pathStageId)||DISCOVERY_PATHS[0];
+          const step=discPath?.steps[pathStep];
+          return(
           <div>
-            <Hdr title="Discovery Questions" accent="Questions" sub="Grouped by theme. Click any to see rationale and follow-ups."/>
-            <div style={{display:"flex",flexDirection:"column",gap:18}}>
-              {DISC.map((g,gi)=>(
-                <div key={gi}>
-                  <div style={{fontWeight:700,fontSize:14,marginBottom:9,color:TX}}>{g.title}</div>
-                  <div style={{display:"flex",flexDirection:"column",gap:7}}>
-                    {g.qs.map((q,qi)=>{
-                      const k=`${gi}-${qi}`;const isOpen=openQ===k;
-                      return(
-                        <div key={qi} onClick={()=>{setOpenQ(isOpen?null:k);if(!isOpen)save({...prog,[`disc-${gi}`]:{...(prog[`disc-${gi}`]||{}),visited:true,lastVisit:Date.now()}});}} style={{background:CD,border:`1px solid ${isOpen?A+"55":BO}`,borderRadius:9,cursor:"pointer",overflow:"hidden",transition:"all .2s"}}>
-                          <div style={{padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
-                            <div style={{fontSize:13,fontStyle:"italic",color:isOpen?TX:MU,fontWeight:isOpen?500:400,flex:1}}>"{q.q}"</div>
-                            <span style={{color:A,fontSize:14,transform:isOpen?"rotate(180deg)":"none",transition:"transform .2s",flexShrink:0}}>▼</span>
-                          </div>
-                          {isOpen&&(
-                            <div style={{padding:"0 14px 12px",borderTop:`1px solid ${BO}`}}>
-                              <div style={{marginTop:10}}>
-                                <div style={{fontSize:10,fontWeight:700,color:WA,marginBottom:3,letterSpacing:.7}}>WHY THIS QUESTION</div>
-                                <div style={{fontSize:12,color:TX,lineHeight:1.7,marginBottom:10}}>{q.why}</div>
-                                <div style={{fontSize:10,fontWeight:700,color:A,marginBottom:3,letterSpacing:.7}}>FOLLOW-UP</div>
-                                <div style={{fontSize:12,fontStyle:"italic",color:MU}}>"{q.fu}"</div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+            <Hdr title="Discovery" accent="Paths" sub="Browse questions by theme or follow a constraint-first path stage by stage."/>
+            <div style={{display:"flex",gap:6,marginBottom:14}}>
+              {(["browse","path"] as const).map(m=>(
+                <button key={m} onClick={()=>setDiscMode(m)}
+                  style={{background:discMode===m?A+"22":C2,border:`1px solid ${discMode===m?A:BO}`,borderRadius:99,padding:"6px 16px",fontSize:12,fontWeight:discMode===m?700:400,color:discMode===m?A:MU,cursor:"pointer",transition:"all .15s",textTransform:"capitalize"}}>
+                  {m==="browse"?"Browse":"Path"}
+                </button>
               ))}
             </div>
+            {discMode==="browse"&&(
+              <div style={{display:"flex",flexDirection:"column",gap:18}}>
+                {DISC.map((g,gi)=>(
+                  <div key={gi}>
+                    <div style={{fontWeight:700,fontSize:14,marginBottom:9,color:TX}}>{g.title}</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                      {g.qs.map((q,qi)=>{
+                        const k=`${gi}-${qi}`;const isOpen=openQ===k;
+                        return(
+                          <div key={qi} onClick={()=>{setOpenQ(isOpen?null:k);if(!isOpen)save({...prog,[`disc-${gi}`]:{...(prog[`disc-${gi}`]||{}),visited:true,lastVisit:Date.now()}});}} style={{background:CD,border:`1px solid ${isOpen?A+"55":BO}`,borderRadius:9,cursor:"pointer",overflow:"hidden",transition:"all .2s"}}>
+                            <div style={{padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
+                              <div style={{fontSize:13,fontStyle:"italic",color:isOpen?TX:MU,fontWeight:isOpen?500:400,flex:1}}>"{q.q}"</div>
+                              <span style={{color:A,fontSize:14,transform:isOpen?"rotate(180deg)":"none",transition:"transform .2s",flexShrink:0}}>▼</span>
+                            </div>
+                            {isOpen&&(
+                              <div style={{padding:"0 14px 12px",borderTop:`1px solid ${BO}`}}>
+                                <div style={{marginTop:10}}>
+                                  <div style={{fontSize:10,fontWeight:700,color:WA,marginBottom:3,letterSpacing:.7}}>WHY THIS QUESTION</div>
+                                  <div style={{fontSize:12,color:TX,lineHeight:1.7,marginBottom:10}}>{q.why}</div>
+                                  <div style={{fontSize:10,fontWeight:700,color:A,marginBottom:3,letterSpacing:.7}}>FOLLOW-UP</div>
+                                  <div style={{fontSize:12,fontStyle:"italic",color:MU}}>"{q.fu}"</div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {discMode==="path"&&discPath&&(
+              <div>
+                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+                  {STAGE_ORDER.map(sid=>{
+                    const s=SDLC_STAGES.find(x=>x.id===sid);
+                    if(!s)return null;
+                    return(
+                      <button key={sid} onClick={()=>{setPathStageId(sid);setPathStep(0);save({...prog,[`path-${sid}`]:{...(prog[`path-${sid}`]||{}),visited:true,lastVisit:Date.now()}});}}
+                        style={{background:pathStageId===sid?A+"22":C2,border:`1px solid ${pathStageId===sid?A:BO}`,borderRadius:99,padding:"5px 13px",fontSize:12,fontWeight:pathStageId===sid?700:400,color:pathStageId===sid?A:MU,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s"}}>
+                        <span>{s.e}</span><span>{s.st}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{background:CD,border:`1px solid ${A}33`,borderRadius:10,padding:16,marginBottom:14}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                    <span style={{fontSize:24}}>{discPath.e}</span>
+                    <div style={{flex:1}}>
+                      <div style={{fontWeight:700,fontSize:15,color:TX}}>{discPath.title}</div>
+                      <div style={{fontSize:11,color:MU}}>Step {pathStep+1} of {discPath.steps.length}</div>
+                    </div>
+                    <div style={{display:"flex",gap:5}}>
+                      {discPath.steps.map((_,i)=>(
+                        <div key={i} style={{width:8,height:8,borderRadius:99,background:i===pathStep?A:i<pathStep?SU:BO,flexShrink:0,cursor:"pointer",transition:"background .15s"}} onClick={()=>setPathStep(i)}/>
+                      ))}
+                    </div>
+                  </div>
+                  {step&&(
+                    <>
+                      <div style={{background:C2,borderRadius:8,padding:"12px 14px",marginBottom:10,border:`1px solid ${BO}`}}>
+                        <div style={{fontSize:10,fontWeight:700,color:WA,marginBottom:5,letterSpacing:.7}}>QUESTION</div>
+                        <div style={{fontSize:13,fontStyle:"italic",color:TX,lineHeight:1.7,marginBottom:8}}>"{step.prompt}"</div>
+                        <div style={{fontSize:10,fontWeight:700,color:MU,marginBottom:3,letterSpacing:.7}}>WHY</div>
+                        <div style={{fontSize:12,color:MU,lineHeight:1.65}}>{step.why}</div>
+                      </div>
+                      {step.hintNext&&<div style={{fontSize:11,color:A,fontWeight:600,marginBottom:8}}>→ Next: {step.hintNext}</div>}
+                      {step.moduleHints&&step.moduleHints.length>0&&(
+                        <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:10}}>
+                          {step.moduleHints.map(h=><Chip key={h} l={h} c={TL}/>)}
+                        </div>
+                      )}
+                    </>
+                  )}
+                  <div style={{display:"flex",gap:8,justifyContent:"space-between",alignItems:"center",borderTop:`1px solid ${BO}`,paddingTop:12}}>
+                    <button onClick={()=>setPathStep(p=>Math.max(0,p-1))} disabled={pathStep===0}
+                      style={{background:"none",border:`1px solid ${pathStep>0?BO:"transparent"}`,borderRadius:7,padding:"7px 14px",fontSize:12,color:pathStep>0?MU:"transparent",cursor:pathStep>0?"pointer":"default"}}>← Back</button>
+                    {pathStep<discPath.steps.length-1?(
+                      <button onClick={()=>setPathStep(p=>p+1)}
+                        style={{background:A,color:BG,border:"none",borderRadius:7,padding:"7px 16px",fontSize:12,fontWeight:700,cursor:"pointer"}}>Next →</button>
+                    ):(
+                      <button onClick={()=>goLandPlanner(pathStageId)}
+                        style={{background:`linear-gradient(135deg,${A},${TL})`,color:BG,border:"none",borderRadius:7,padding:"7px 16px",fontSize:12,fontWeight:700,cursor:"pointer"}}>Open Land Planner →</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+          );
+        })()}
 
-        {/* ── tab 6: Glossary ───────────────────────────────────────────── */}
+        {/* ── tab 6: Land Planner ───────────────────────────────────────── */}
         {tab===6&&(()=>{
+          const STAGE_ORDER=["plan","code","build","test","secure","release","operate","improve"];
+          const stage=SDLC_STAGES.find(s=>s.id===landConstraint)||null;
+          const modTitles=stage?.mods||[];
+          const resolveMod=(title:string)=>MODS.find(m=>m.title===title);
+          const landMod=resolveMod(modTitles[0]||"");
+          const expandMods=modTitles.slice(1).map(resolveMod).filter((m):m is typeof MODS[0]=>!!m);
+          const proofTemplate=LAND_PROOF_TEMPLATES.find(t=>t.risk===landRisk);
+          const discPath=DISCOVERY_PATHS.find(p=>p.stageId===landConstraint);
+          const stanceColor=(s:string)=>s==="replace"?ER:s==="coexist"?WA:TL;
+          const buildBrief=()=>{
+            const lines:string[]=[];
+            lines.push(`# Land Planner — ${stage?.st||"(no stage selected)"}\n`);
+            if(landMod)lines.push(`## Wedge Module\n${landMod.e||""} **${landMod.title}** — ${landMod.short||""}\n`);
+            if(stage?.question)lines.push(`Stage question: ${stage.question}\n`);
+            if(stage?.friction&&stage.friction.length>0)lines.push(`Friction signals:\n${stage.friction.map((f:string)=>`- ${f}`).join("\n")}\n`);
+            if(expandMods.length>0)lines.push(`Expansion modules: ${expandMods.map(m=>m.title).join(", ")}\n`);
+            if(discPath&&discPath.steps.length>=2)lines.push(`Confirming questions:\n- ${discPath.steps[0].prompt}\n- ${discPath.steps[1].prompt}\n`);
+            if(landToolchain.size>0){
+              lines.push(`## Toolchain Honesty`);
+              LAND_TOOLCHAIN.filter(t=>landToolchain.has(t.id)).forEach(t=>{
+                lines.push(`**${t.label}** [${t.stance.toUpperCase()}]: ${t.note}`);
+              });
+              lines.push("");
+            }
+            if(proofTemplate){
+              lines.push(`## Proof Ladder — ${proofTemplate.label}`);
+              lines.push(`What to show: ${proofTemplate.whatToShow}`);
+              lines.push(`Metric: ${proofTemplate.metric}`);
+              lines.push(`Who attends: ${proofTemplate.whoAttends}`);
+              lines.push(`Exit criteria: ${proofTemplate.exitCriteria}`);
+              lines.push(`Non-goals: ${proofTemplate.nonGoals}`);
+            }
+            return lines.join("\n");
+          };
+          return(
+          <div>
+            <Hdr title="Land Planner" accent="Planner" sub="Enter a complex platform deal: wedge → toolchain honesty → proof ladder. No fake accounts."/>
+            {/* Shared inputs */}
+            <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:16,marginBottom:14}}>
+              <div style={{fontSize:10,fontWeight:700,color:MU,letterSpacing:1,marginBottom:8,textTransform:"uppercase"}}>Constraint Stage (required)</div>
+              <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+                {STAGE_ORDER.map(sid=>{
+                  const s=SDLC_STAGES.find(x=>x.id===sid);
+                  if(!s)return null;
+                  return(
+                    <button key={sid} onClick={()=>setLandConstraint(landConstraint===sid?"":sid)}
+                      style={{background:landConstraint===sid?A+"22":C2,border:`1px solid ${landConstraint===sid?A:BO}`,borderRadius:99,padding:"5px 13px",fontSize:12,fontWeight:landConstraint===sid?700:400,color:landConstraint===sid?A:MU,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"all .15s"}}>
+                      <span>{s.e}</span><span>{s.st}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div style={{fontSize:10,fontWeight:700,color:MU,letterSpacing:1,marginBottom:8,textTransform:"uppercase"}}>Personas in Room</div>
+              <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+                {PERSONAS.map(p=>{
+                  const sel=landPersonas.includes(p.id);
+                  return(
+                    <button key={p.id} onClick={()=>setLandPersonas(prev=>sel?prev.filter(x=>x!==p.id):[...prev,p.id])}
+                      style={{background:sel?A+"22":C2,border:`1px solid ${sel?A:BO}`,borderRadius:99,padding:"4px 11px",fontSize:11,fontWeight:sel?700:400,color:sel?A:MU,cursor:"pointer",display:"flex",alignItems:"center",gap:4,transition:"all .15s"}}>
+                      <span>{p.e}</span><span>{p.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div style={{fontSize:10,fontWeight:700,color:MU,letterSpacing:1,marginBottom:8,textTransform:"uppercase"}}>Their Toolchain</div>
+              <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+                {LAND_TOOLCHAIN.map(t=>{
+                  const sel=landToolchain.has(t.id);
+                  return(
+                    <button key={t.id} onClick={()=>setLandToolchain(prev=>{const n=new Set(prev);sel?n.delete(t.id):n.add(t.id);return n;})}
+                      style={{background:sel?A+"22":C2,border:`1px solid ${sel?A:BO}`,borderRadius:99,padding:"4px 11px",fontSize:11,fontWeight:sel?700:400,color:sel?A:MU,cursor:"pointer",transition:"all .15s"}}>
+                      {t.label}
+                    </button>
+                  );
+                })}
+              </div>
+              <div style={{fontSize:10,fontWeight:700,color:MU,letterSpacing:1,marginBottom:8,textTransform:"uppercase"}}>Risk Theme</div>
+              <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                {LAND_PROOF_TEMPLATES.map(t=>(
+                  <button key={t.risk} onClick={()=>setLandRisk(t.risk as LandRiskTheme)}
+                    style={{background:landRisk===t.risk?A+"22":C2,border:`1px solid ${landRisk===t.risk?A:BO}`,borderRadius:99,padding:"4px 11px",fontSize:11,fontWeight:landRisk===t.risk?700:400,color:landRisk===t.risk?A:MU,cursor:"pointer",transition:"all .15s"}}>
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {!landConstraint&&(
+              <div style={{color:MU,fontSize:13,textAlign:"center",padding:"24px 0"}}>← Pick a constraint stage above to build your land narrative.</div>
+            )}
+            {landConstraint&&stage&&(
+              <>
+                {/* Section 1: Wedge */}
+                <div style={{background:CD,border:`1px solid ${A}33`,borderRadius:10,padding:16,marginBottom:14}}>
+                  <div style={{fontSize:10,fontWeight:800,color:A,letterSpacing:1.2,marginBottom:10,textTransform:"uppercase"}}>1 · Wedge</div>
+                  {landMod&&(
+                    <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:10}}>
+                      <span style={{fontSize:24}}>{landMod.e}</span>
+                      <div>
+                        <div style={{fontWeight:700,fontSize:14,color:TX,marginBottom:3}}>{landMod.title}</div>
+                        <div style={{fontSize:12,color:MU,lineHeight:1.6}}>{landMod.short}</div>
+                      </div>
+                    </div>
+                  )}
+                  {stage.question&&<div style={{fontSize:12,fontStyle:"italic",color:MU,marginBottom:10,padding:"8px 12px",background:C2,borderRadius:7,border:`1px solid ${BO}`}}>"{stage.question}"</div>}
+                  {stage.friction&&stage.friction.length>0&&(
+                    <div style={{marginBottom:10}}>
+                      <div style={{fontSize:10,fontWeight:700,color:WA,marginBottom:5,letterSpacing:.7}}>FRICTION SIGNALS</div>
+                      {stage.friction.map((f:string,i:number)=>(
+                        <div key={i} style={{display:"flex",gap:7,marginBottom:3,fontSize:12,color:TX,lineHeight:1.55}}>
+                          <span style={{color:WA,flexShrink:0}}>›</span><span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {expandMods.length>0&&(
+                    <div style={{marginBottom:10}}>
+                      <div style={{fontSize:10,fontWeight:700,color:TL,marginBottom:5,letterSpacing:.7}}>EXPANSION MODULES</div>
+                      <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                        {expandMods.map(m=><Chip key={m.id} l={m.title||m.id} c={TL}/>)}
+                      </div>
+                    </div>
+                  )}
+                  {discPath&&discPath.steps.length>=2&&(
+                    <div>
+                      <div style={{fontSize:10,fontWeight:700,color:MU,marginBottom:5,letterSpacing:.7}}>CONFIRMING QUESTIONS</div>
+                      {[discPath.steps[0],discPath.steps[1]].map((s,i)=>(
+                        <div key={i} style={{fontSize:12,fontStyle:"italic",color:MU,marginBottom:4,lineHeight:1.6}}>"{s.prompt}"</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {/* Section 2: Toolchain honesty */}
+                {landToolchain.size>0&&(
+                  <div style={{background:CD,border:`1px solid ${BO}`,borderRadius:10,padding:16,marginBottom:14}}>
+                    <div style={{fontSize:10,fontWeight:800,color:WA,letterSpacing:1.2,marginBottom:10,textTransform:"uppercase"}}>2 · Toolchain Honesty</div>
+                    <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                      {LAND_TOOLCHAIN.filter(t=>landToolchain.has(t.id)).map(t=>(
+                        <div key={t.id} style={{background:C2,borderRadius:8,padding:"10px 12px",border:`1px solid ${BO}`}}>
+                          <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:5}}>
+                            <span style={{fontWeight:700,fontSize:12,color:TX,flex:1}}>{t.label}</span>
+                            <Chip l={t.stance.toUpperCase()} c={stanceColor(t.stance)}/>
+                          </div>
+                          <div style={{fontSize:12,color:MU,lineHeight:1.6,marginBottom:5}}>{t.note}</div>
+                          <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                            {t.modules.map(m=><Chip key={m} l={m} c={TL}/>)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Section 3: Proof ladder */}
+                {proofTemplate&&(
+                  <div style={{background:CD,border:`1px solid ${SU}33`,borderRadius:10,padding:16,marginBottom:14}}>
+                    <div style={{fontSize:10,fontWeight:800,color:SU,letterSpacing:1.2,marginBottom:10,textTransform:"uppercase"}}>3 · Proof Ladder — {proofTemplate.label}</div>
+                    {[
+                      {l:"WHAT TO SHOW",v:proofTemplate.whatToShow},
+                      {l:"METRIC",v:proofTemplate.metric},
+                      {l:"WHO ATTENDS",v:proofTemplate.whoAttends},
+                      {l:"EXIT CRITERIA",v:proofTemplate.exitCriteria},
+                      {l:"NON-GOALS",v:proofTemplate.nonGoals},
+                    ].map(({l,v})=>(
+                      <div key={l} style={{marginBottom:10}}>
+                        <div style={{fontSize:10,fontWeight:700,color:MU,marginBottom:3,letterSpacing:.7}}>{l}</div>
+                        <div style={{fontSize:12,color:TX,lineHeight:1.65}}>{v}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <button onClick={()=>{
+                  const brief=buildBrief();
+                  navigator.clipboard.writeText(brief).then(()=>{setLandBriefCopied(true);setTimeout(()=>setLandBriefCopied(false),2000);}).catch(()=>{});
+                }} style={{width:"100%",background:landBriefCopied?SU:A,color:BG,border:"none",borderRadius:8,padding:"11px",fontWeight:700,fontSize:13,cursor:"pointer",transition:"background .2s",marginBottom:8}}>
+                  {landBriefCopied?"✓ Copied!":"📋 Copy land brief"}
+                </button>
+              </>
+            )}
+          </div>
+          );
+        })()}
+
+        {/* ── tab 7: Objection Gym ───────────────────────────────────────── */}
+        {tab===7&&(()=>{
+          const THEME_LABELS:Record<ObjectionTheme,string>={
+            category_reframe:"Category Reframe",
+            security_trust:"Security / Trust",
+            consolidation:"Consolidation",
+            ai_washing:"AI Washing",
+            budget_owner:"Budget / Owner",
+          };
+          const themes=(Object.keys(THEME_LABELS) as ObjectionTheme[]);
+          const filteredObjs=OBJECTIONS.filter(o=>{
+            const themeOk=objTheme==="all"||o.theme===objTheme;
+            const personaOk=objPersona==="all"||o.personaIds.includes(objPersona);
+            return themeOk&&personaOk;
+          });
+          const activeCard:ObjectionCard|undefined=OBJECTIONS.find(o=>o.id===objActiveId);
+          return(
+          <div>
+            <Hdr title="Objection Gym" accent="Gym" sub="Practise hard objections offline — or with AI coach. Pick a theme and try it in your own words first."/>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:8}}>
+              <button onClick={()=>setObjTheme("all")} style={{background:objTheme==="all"?A+"22":C2,border:`1px solid ${objTheme==="all"?A:BO}`,borderRadius:99,padding:"4px 12px",fontSize:11,fontWeight:objTheme==="all"?700:400,color:objTheme==="all"?A:MU,cursor:"pointer"}}>All</button>
+              {themes.map(t=>(
+                <button key={t} onClick={()=>setObjTheme(t)} style={{background:objTheme===t?A+"22":C2,border:`1px solid ${objTheme===t?A:BO}`,borderRadius:99,padding:"4px 12px",fontSize:11,fontWeight:objTheme===t?700:400,color:objTheme===t?A:MU,cursor:"pointer"}}>{THEME_LABELS[t]}</button>
+              ))}
+            </div>
+            <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
+              <button onClick={()=>setObjPersona("all")} style={{background:objPersona==="all"?TL+"22":C2,border:`1px solid ${objPersona==="all"?TL:BO}`,borderRadius:99,padding:"3px 10px",fontSize:11,fontWeight:objPersona==="all"?700:400,color:objPersona==="all"?TL:MU,cursor:"pointer"}}>All personas</button>
+              {PERSONAS.map(p=>(
+                <button key={p.id} onClick={()=>setObjPersona(objPersona===p.id?"all":p.id)} style={{background:objPersona===p.id?TL+"22":C2,border:`1px solid ${objPersona===p.id?TL:BO}`,borderRadius:99,padding:"3px 10px",fontSize:11,fontWeight:objPersona===p.id?700:400,color:objPersona===p.id?TL:MU,cursor:"pointer",display:"flex",alignItems:"center",gap:4}}>
+                  <span>{p.e}</span><span>{p.title}</span>
+                </button>
+              ))}
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:activeCard?"1fr 1fr":"1fr 1fr",gap:10}}>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {filteredObjs.length===0&&<div style={{color:MU,fontSize:13,padding:"16px 0"}}>No objections match these filters.</div>}
+                {filteredObjs.map(o=>(
+                  <div key={o.id} onClick={()=>setObjActiveId(objActiveId===o.id?null:o.id)}
+                    style={{background:objActiveId===o.id?A+"11":CD,border:`1px solid ${objActiveId===o.id?A+"55":BO}`,borderRadius:9,padding:"11px 13px",cursor:"pointer",transition:"all .15s"}}
+                    onMouseEnter={e=>{if(objActiveId!==o.id)(e.currentTarget as HTMLDivElement).style.borderColor=A+"33";}}
+                    onMouseLeave={e=>{if(objActiveId!==o.id)(e.currentTarget as HTMLDivElement).style.borderColor=BO;}}>
+                    <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                      <span style={{fontSize:18,flexShrink:0}}>{o.e}</span>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:10,fontWeight:700,color:MU,marginBottom:3,letterSpacing:.7}}>{THEME_LABELS[o.theme]}</div>
+                        <div style={{fontWeight:600,fontSize:12,color:TX,lineHeight:1.5}}>{o.title}</div>
+                        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:5}}>
+                          {o.personaIds.map(pid=>{const per=PERSONAS.find(p=>p.id===pid);return per?<span key={pid} style={{fontSize:9,color:MU}}>{per.e}</span>:null;})}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {activeCard&&(
+                <div style={{background:CD,border:`1px solid ${A}33`,borderRadius:10,padding:16,position:"sticky",top:16,alignSelf:"flex-start"}}>
+                  <div style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:10}}>
+                    <span style={{fontSize:22}}>{activeCard.e}</span>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:10,fontWeight:700,color:MU,letterSpacing:.7,marginBottom:2}}>{THEME_LABELS[activeCard.theme]}</div>
+                      <div style={{fontWeight:700,fontSize:13,color:TX,lineHeight:1.4}}>{activeCard.title}</div>
+                    </div>
+                  </div>
+                  <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
+                    {activeCard.personaIds.map(pid=>{const per=PERSONAS.find(p=>p.id===pid);return per?<Chip key={pid} l={per.title||pid} c={TL}/>:null;})}
+                  </div>
+                  <div style={{background:ER+"11",border:`1px solid ${ER}33`,borderRadius:7,padding:"9px 12px",marginBottom:10}}>
+                    <div style={{fontSize:10,fontWeight:700,color:ER,marginBottom:3,letterSpacing:.7}}>TRAP</div>
+                    <div style={{fontSize:12,color:TX,lineHeight:1.65}}>{activeCard.trap}</div>
+                  </div>
+                  <div style={{background:SU+"11",border:`1px solid ${SU}33`,borderRadius:7,padding:"9px 12px",marginBottom:10}}>
+                    <div style={{fontSize:10,fontWeight:700,color:SU,marginBottom:3,letterSpacing:.7}}>STRONG ANSWER</div>
+                    <div style={{fontSize:12,color:TX,lineHeight:1.65}}>{activeCard.strongAnswer}</div>
+                  </div>
+                  <div style={{background:A+"11",border:`1px solid ${A}33`,borderRadius:7,padding:"9px 12px",marginBottom:12}}>
+                    <div style={{fontSize:10,fontWeight:700,color:A,marginBottom:3,letterSpacing:.7}}>COACH TIPS</div>
+                    <div style={{fontSize:12,color:TX,lineHeight:1.65}}>{activeCard.coachTips}</div>
+                  </div>
+                  <button onClick={()=>{
+                    const item:Item={
+                      id:activeCard.id,
+                      e:activeCard.e,
+                      title:activeCard.title,
+                      short:activeCard.theme,
+                      d:`## Objection\n${activeCard.title}\n\n## Trap\n${activeCard.trap}\n\n## Strong answer\n${activeCard.strongAnswer}\n\n## Coach tips\n${activeCard.coachTips}`,
+                      sa:activeCard.strongAnswer,
+                    };
+                    openChat(item,"objection");
+                  }} style={{width:"100%",background:`linear-gradient(135deg,${A},${TL})`,color:BG,border:"none",borderRadius:8,padding:"10px",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+                    🥊 Practice with AI →
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          );
+        })()}
+
+        {/* ── tab 8: Glossary ───────────────────────────────────────────── */}
+        {tab===8&&(()=>{
           const sq=glossarySearch.toLowerCase().trim();
           const searchResults=sq?GLOSSARY.flatMap(cat=>
             cat.terms.filter(t=>t.term.toLowerCase().includes(sq)||t.def.toLowerCase().includes(sq))
@@ -1294,8 +1686,8 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
           );
         })()}
 
-        {/* ── tab 7: Calls ──────────────────────────────────────────────── */}
-        {tab===7&&(
+        {/* ── tab 9: Calls ──────────────────────────────────────────────── */}
+        {tab===9&&(
           <div>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
               <div>
@@ -1521,8 +1913,8 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
           </div>
         )}
 
-        {/* ── tab 8: Progress ──────────────────────────────────────────── */}
-        {tab===8&&(
+        {/* ── tab 10: Progress ──────────────────────────────────────────── */}
+        {tab===10&&(
           <div>
             <Hdr title="My Learning Progress" accent="Progress" sub="Every deep dive builds context. Dot colours: grey = not started, amber = visited, green = deep dived."/>
             {(()=>{
@@ -1561,21 +1953,23 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
               ))}
             </div>
             {[
-              {label:"Solutions",items:MODS as Item[]},
-              {label:"Architecture",items:ARCH as Item[]},
-              {label:"Personas",items:PERSONAS as Item[]},
-              {label:"Competitive",items:COMPS as Item[]},
-              {label:"Discovery",items:DISC_ITEMS},
-            ].map(({label,items})=>(
+              {label:"Solutions",items:MODS as Item[],onClick:(item:Item)=>setModal(item)},
+              {label:"Architecture",items:ARCH as Item[],onClick:(item:Item)=>setModal(item)},
+              {label:"Personas",items:PERSONAS as Item[],onClick:(item:Item)=>setModal(item)},
+              {label:"Competitive",items:COMPS as Item[],onClick:(item:Item)=>setModal(item)},
+              {label:"Discovery",items:DISC_ITEMS,onClick:()=>setTab(5)},
+              {label:"Discovery Paths",items:PATH_ITEMS,onClick:(item:Item)=>{const sid=item.id.replace("path-","");setTab(5);setDiscMode("path");setPathStageId(sid);setPathStep(0);}},
+              {label:"Objection Gym",items:OBJ_ITEMS,onClick:(item:Item)=>{setTab(7);setObjActiveId(item.id);}},
+            ].map(({label,items,onClick})=>(
               <div key={label} style={{marginBottom:18}}>
                 <div style={{fontWeight:700,fontSize:11,color:MU,marginBottom:7,textTransform:"uppercase",letterSpacing:1}}>{label}</div>
                 <div style={{display:"flex",flexDirection:"column",gap:5}}>
                   {items.map(item=>{
                     const p=prog[item.id];const title=item.title||item.n||item.co||"";const t=tierOf(p);
                     const tColor=t==="mastered"?SU:t==="practiced"?A:t==="viewed"?WA:BO;
-                    const isDisc=item.id.startsWith("disc-");
+                    const isDisc=item.id.startsWith("disc-")||item.id.startsWith("path-");
                     return(
-                      <div key={item.id} onClick={()=>isDisc?setTab(5):setModal(item)} style={{background:CD,border:`1px solid ${t==="none"?BO:tColor+"33"}`,borderRadius:7,padding:"9px 13px",cursor:"pointer",display:"flex",alignItems:"center",gap:11,transition:"all .15s"}}
+                      <div key={item.id} onClick={()=>onClick(item)} style={{background:CD,border:`1px solid ${t==="none"?BO:tColor+"33"}`,borderRadius:7,padding:"9px 13px",cursor:"pointer",display:"flex",alignItems:"center",gap:11,transition:"all .15s"}}
                         onMouseEnter={e=>(e.currentTarget as HTMLDivElement).style.background=C2}
                         onMouseLeave={e=>(e.currentTarget as HTMLDivElement).style.background=CD}>
                         <div style={{fontSize:15}}>{item.e||"•"}</div>
@@ -1595,8 +1989,8 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
           </div>
         )}
 
-        {/* ── tab 9: Settings ──────────────────────────────────────────── */}
-        {tab===9&&(
+        {/* ── tab 11: Settings ──────────────────────────────────────────── */}
+        {tab===11&&(
           <div>
             <Hdr title="Settings" accent="Settings" sub="Global preferences and data management for your GTM Enablement Hub session."/>
 
@@ -1890,7 +2284,7 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
             {callHistory.length===0&&<div style={{color:MU,fontSize:13}}>No saved calls yet.</div>}
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
               {callHistory.map(h=>(
-                <div key={h.id} onClick={()=>{setCallMsgs(h.messages);setCurrentCallId(h.id);setCallAccount(h.account||"");setCallContact(h.contact||"");setCallModules(h.modules||[]);setTab(7);setShowCallHistory(false);setEditingCallMeta(false);}}
+                <div key={h.id} onClick={()=>{setCallMsgs(h.messages);setCurrentCallId(h.id);setCallAccount(h.account||"");setCallContact(h.contact||"");setCallModules(h.modules||[]);setTab(9);setShowCallHistory(false);setEditingCallMeta(false);}}
                   style={{background:currentCallId===h.id?A+"11":C2,border:`1px solid ${currentCallId===h.id?A+"44":BO}`,borderRadius:8,padding:"11px 13px",cursor:"pointer",transition:"all .15s"}}
                   onMouseEnter={e=>(e.currentTarget as HTMLDivElement).style.borderColor=A+"55"}
                   onMouseLeave={e=>(e.currentTarget as HTMLDivElement).style.borderColor=currentCallId===h.id?A+"44":BO}>
@@ -1914,7 +2308,7 @@ MODULES: [comma-separated list using ONLY these exact abbreviations, max 5, most
             <div style={{padding:"13px 16px",borderBottom:`1px solid ${BO}`,display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
               <div>
                 <div style={{fontWeight:700,fontSize:13}}>🧠 {chat.topic.title}</div>
-                <div style={{fontSize:11,color:MU,marginTop:1}}>{chat.topic.mode==="concept"?"Understand it · explore it · explain it":"Explain it · get challenged · master it"}</div>
+                <div style={{fontSize:11,color:MU,marginTop:1}}>{chat.topic.mode==="concept"?"Understand it · explore it · explain it":chat.topic.mode==="objection"?"Answer it · get scored · sharpen the response":"Explain it · get challenged · master it"}</div>
               </div>
               <button onClick={()=>setChat(null)} style={{background:"none",border:"none",color:MU,fontSize:22,cursor:"pointer",lineHeight:1}}>×</button>
             </div>

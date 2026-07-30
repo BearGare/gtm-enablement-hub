@@ -17,9 +17,9 @@ The Turso + Voyage RAG coaching layer is in place (see [README](README.md#option
 - [x] Canonical Relay naming (CI/CD, 14 modules) + value-stream SDLC reframe — see `docs/NAMING.md`
 - [x] ~~Richer public-source citations on account briefs~~ — cancelled (Accounts tab removed)
 - [x] ~~Outbound pack export~~ — cancelled (Outbound Lab removed)
-- [ ] **Objection Gym** — new tab: objection cards by persona × theme; AI coach scores answers. Category-reframe drills live here.
-- [ ] **Discovery Paths** — fold into Discovery tab (Browse + Path modes); constraint-first branching, not a separate tab
-- [ ] **Land Planner** — new tab combining wedge finder + toolchain coexist/replace honesty + anti-boil-the-ocean proof ladder into one land brief
+- [x] **Objection Gym** — new tab: objection cards by persona × theme; AI coach scores answers. Category-reframe drills live here.
+- [x] **Discovery Paths** — fold into Discovery tab (Browse + Path modes); constraint-first branching, not a separate tab
+- [x] **Land Planner** — new tab combining wedge finder + toolchain coexist/replace honesty + anti-boil-the-ocean proof ladder into one land brief
 - [ ] Dual-write progress / bookmarks / call history to Turso
 - [ ] Cross-links between personas, modules, and competitive cards
 - [ ] Mobile pass once the hub is in regular use

@@ -5,8 +5,8 @@ Checklist to run the hub yourself, share a screen recording, or walk someone thr
 ## Before you open the app
 
 ```bash
-git clone https://github.com/BearGare/gtm-signal-hub.git
-cd gtm-signal-hub
+git clone https://github.com/BearGare/gtm-enablement-hub.git
+cd gtm-enablement-hub
 npm install
 cp .env.local.example .env.local
 # ANTHROPIC_API_KEY → coaching + Calls (optional but impressive)
@@ -26,13 +26,13 @@ npm run dev    # http://localhost:5173
 
 | Time | Tab | Say / show |
 |---|---|---|
-| 0:00 | **Dashboard** | “Market → constraint → play, structured.” Click **Explore SDLC Map**. |
-| 0:20 | **SDLC** | Value stream Plan→Improve. Open **Release** or **Test**. Find the constraint. |
-| 1:20 | **Solutions** + **Personas** | Module on that constraint; how the buyer thinks about it. |
-| 2:00 | **Discovery** or **Competitive** | Question bank with rationale, or a top battlecard. |
-| 2:50 | **Settings → About this hub** | Research standards; judgment over invented intel. |
+| 0:00 | **Dashboard** | “Market → constraint → land → practice.” Click **Explore SDLC Map**. |
+| 0:20 | **SDLC** | Value stream Plan→Improve. Open **Release** or **Test**. |
+| 1:00 | **Discovery → Path** | Walk the stage path → **Open Land Planner**. |
+| 1:40 | **Land Planner** | Wedge + toolchain honesty + proof ladder → copy brief. |
+| 2:20 | **Objection Gym** | Category-reframe drill; optional AI coach. |
 
-Optional (+1 min): **Calls** → **Load sample transcript** → **Analyse Call**.
+Optional (+1 min): **Calls** → sample transcript, or **Settings → About this hub**.
 
 Full narration: [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
 

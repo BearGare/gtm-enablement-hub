@@ -8,7 +8,9 @@ A sales enablement hub for the **Relay** GTM organisation. Relay is a fictional 
 - The software delivery lifecycle as one value stream (Plan → Improve) — constraint-first, not loop-based
 - Buyer personas and how to approach each
 - Competitive landscape cards
-- Discovery questions with rationale
+- Discovery questions with rationale + constraint-first Paths
+- Land Planner (wedge → toolchain honesty → proof ladder)
+- Objection Gym (offline drills + optional AI coach)
 - AI-powered call analysis
 
 The AI coaching chat (Anthropic Claude) uses Socratic coaching — explain it, get challenged, build confidence before a real customer conversation.
@@ -19,8 +21,8 @@ The AI coaching chat (Anthropic Claude) uses Socratic coaching — explain it, g
 
 - `src/colors.ts` — colour palette
 - `src/types.ts` — TypeScript types
-- `src/data/*` — all GTM content (modules, personas, comps, discovery, glossary, SDLC, architecture, Relay AI)
-- `src/App.tsx` — UI, state, chat, call analysis
+- `src/data/*` — all GTM content (modules, personas, comps, discovery, discoveryPaths, landPlanner, objections, glossary, SDLC, architecture, Relay AI)
+- `src/App.tsx` — UI, state, chat, Land Planner, Objection Gym, call analysis
 
 **API proxy:** `api/chat.ts` proxies Anthropic server-side and runs the optional RAG pipeline (embed → hybrid vector+FTS5 → augment system prompt). Locally, `vite.config.ts` mirrors the same pipeline.
 

@@ -4,6 +4,13 @@ A dated record of what has shipped. For what's coming next, see [ROADMAP.md](ROA
 
 ---
 
+## 30 July 2026 (enablement practice tabs)
+
+- **Discovery Paths** — Browse / Path modes on the Discovery tab; one constraint-first path per SDLC stage with handoff to Land Planner.
+- **Land Planner** — new tab: shared inputs (constraint, personas, toolchain, risk) → wedge + toolchain honesty + proof ladder; copy land brief (deterministic, offline).
+- **Objection Gym** — new tab: 15 drills by theme × persona; offline strong answers + optional AI coach scoring (`ChatMode: objection`).
+- Repo renamed to `gtm-enablement-hub` on GitHub.
+
 ## 30 July 2026 (hub prune)
 
 - **Renamed** user-facing product to **GTM Enablement Hub** (localStorage keys stay `signalHub*`).

@@ -34,8 +34,8 @@ To switch on whole-hub coaching, see [Optional: enable RAG coaching](#optional-e
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/BearGare/gtm-signal-hub.git
-cd gtm-signal-hub
+git clone https://github.com/BearGare/gtm-enablement-hub.git
+cd gtm-enablement-hub
 
 # 2. Install dependencies
 npm install
@@ -95,10 +95,12 @@ The coach now retrieves across the whole hub. Remove the keys and it falls back 
 | SDLC | Value stream: Plan → Code → Build → Test → Secure → Release → Operate → Improve |
 | Personas | Technical buyer enablement cards |
 | Competitive | Landscape cards framed for Relay |
-| Discovery | Question banks with rationale |
+| Discovery | Question banks (Browse) + constraint-first Paths |
+| Land Planner | Wedge → toolchain honesty → proof ladder; copy land brief |
+| Objection Gym | Hard-objection drills offline or with AI coach |
 | Glossary | Industry + Relay terms with auto-link |
 | Calls | Paste a transcript → structured analysis |
-| Progress / Settings | Practice tiers + preferences; About this hub (research standards) under Settings |
+| Progress / Settings | Practice tiers + preferences; About this hub under Settings |
 
 ---
 

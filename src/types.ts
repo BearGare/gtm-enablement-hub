@@ -54,3 +54,61 @@ export type ProgMap = Record<string, {
 
 export type GlossaryTerm = { term: string; def: string; seeAlso?: string };
 export type GlossaryCategory = { id: string; title: string; emoji: string; terms: GlossaryTerm[] };
+
+/** Constraint-first discovery path (one per SDLC stage). */
+export type DiscoveryPathStep = {
+  prompt: string;
+  why: string;
+  hintNext: string;
+  moduleHints?: string[];
+};
+
+export type DiscoveryPath = {
+  stageId: string;
+  title: string;
+  e: string;
+  steps: DiscoveryPathStep[];
+};
+
+export type ObjectionTheme =
+  | "category_reframe"
+  | "security_trust"
+  | "consolidation"
+  | "ai_washing"
+  | "budget_owner";
+
+export type ObjectionCard = {
+  id: string;
+  e: string;
+  title: string;
+  theme: ObjectionTheme;
+  personaIds: string[];
+  moduleIds: string[];
+  trap: string;
+  strongAnswer: string;
+  coachTips: string;
+};
+
+export type LandStance = "replace" | "coexist" | "integrate";
+
+export type LandToolchainCategory = {
+  id: string;
+  label: string;
+  /** Default honesty stance vs Relay for this category of tooling. */
+  stance: LandStance;
+  /** Relay modules most relevant when this category is present. */
+  modules: string[];
+  note: string;
+};
+
+export type LandRiskTheme = "security" | "switching_cost" | "already_have_x" | "ai_skepticism";
+
+export type LandProofTemplate = {
+  risk: LandRiskTheme;
+  label: string;
+  whatToShow: string;
+  metric: string;
+  whoAttends: string;
+  exitCriteria: string;
+  nonGoals: string;
+};
