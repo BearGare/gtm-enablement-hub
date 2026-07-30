@@ -98,7 +98,7 @@ The coach now retrieves across the whole hub. Remove the keys and it falls back 
 | Discovery | Question banks (Browse) + constraint-first Paths |
 | Land Planner | Wedge → toolchain honesty → proof ladder; copy land brief |
 | Objection Gym | Hard-objection drills offline or with AI coach |
-| Glossary | Industry + Relay terms with auto-link |
+| Glossary | Industry + Relay + competitive terms with auto-link (popover → battlecard) |
 | Calls | Paste a transcript → structured analysis |
 | Progress / Settings | Practice tiers + preferences; About this hub under Settings |
 

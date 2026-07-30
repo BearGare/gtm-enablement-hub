@@ -18,7 +18,7 @@ VP Eng: The platform team wants daily. In practice a lot of teams are still week
 SDR: What happens when a bad deploy lands?
 VP Eng: Someone notices in Datadog, we scramble in Slack, and rollback is manual. We've had a couple of incidents this quarter where AI-generated code looked fine in review and still broke a checkout path.
 SDR: Are you measuring that volume of AI-assisted code?
-VP Eng: Not really. Devs love Cursor. Leadership is asking what changed in lead time and change-fail rate, and we don't have a clean answer.
+VP Eng: Not really. Devs love Cursor / Windsurf. Leadership is asking what changed in lead time and change-fail rate, and we don't have a clean answer.
 SDR: Who else feels that pain?
 VP Eng: Our Head of Platform owns the golden paths. Security wants policy gates earlier. FinOps keeps pinging us about idle clusters after big launches.
 SDR: If you could fix one thing in the next two quarters?

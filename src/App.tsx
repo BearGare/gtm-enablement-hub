@@ -7,7 +7,7 @@ import { PILLARS, MODS, ARCH, PERSONAS, COMPS, DISC, RELAY_AI, SDLC_STAGES, SDLC
 // Sorted glossary keys longest-first so multi-word terms match before single words
 const GKEYS=Object.keys(GLOSSARY_LOOKUP).sort((a,b)=>b.length-a.length);
 // Short abbreviations that are always written in ALL CAPS — only link when uppercase
-const UPPERCASE_ONLY=new Set(["pr","prs","ci","cd","sre","slo","sli","slos","iac","cve","sbom","slsa","sast","dast","sca","ast","mttr","e2e","api","vm","vms","soc","yaml","commit","waf","opa","secret","secrets","drift","monolith","gha","rbac","eks","ecs","aws","gcp","ide","ar","fme"]);
+const UPPERCASE_ONLY=new Set(["pr","prs","ci","cd","sre","slo","sli","slos","iac","cve","sbom","slsa","sast","dast","sca","ast","mttr","e2e","api","vm","vms","soc","yaml","commit","waf","opa","secret","secrets","drift","monolith","gha","ghas","rbac","eks","ecs","aws","gcp","ide","ar","fme","mcp"]);
 // Regex with \b word boundaries — prevents matching inside longer words
 const GTERM_RE=new RegExp(
   GKEYS.map(k=>"\\b"+k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").join("|"),
@@ -359,13 +359,23 @@ export default function App(){
   const STAGE_IDS=new Set(["plan","code","build","test","secure","release","operate","improve"]);
 
   const openModByName=(name:string)=>{
-    const id=MOD_NAME_TO_ID[name.toLowerCase()];
+    const lo=name.toLowerCase();
+    const id=MOD_NAME_TO_ID[lo];
     let item:import("./types").Item|undefined=MODS.find(m=>m.id===id);
     if(!item&&id){for(const mod of MODS){const sub=mod.subModules?.find(s=>s.id===id);if(sub){item=sub;break;}}}
+    if(!item){
+      const allAi=[...RELAY_AI.platform,...RELAY_AI.agents,...RELAY_AI.features];
+      item=allAi.find(m=>(m.title||"").toLowerCase()===lo || m.id===id);
+    }
     if(item){setTab(1);setModal(item);save({...prog,[item.id]:{...(prog[item.id]||{}),visited:true,lastVisit:Date.now()}});}
     else setTab(1);
   };
 
+  // seeAlso tokens (comma+space separated). Interactive suffixes:
+  //   "… tab"        → STAB_MAP tab switch
+  //   "… stage(s)"   → SDLC tab (+ stage focus when recognised)
+  //   "… module"     → openModByName (Relay modules + Relay AI cards)
+  //   "… battlecard" → Competitive tab + open matching COMPS item (match n or id)
   const renderSeeAlso=(seeAlso:string)=>seeAlso.split(", ").map((part,i)=>{
     const lo=part.toLowerCase();
     let onClick:(()=>void)|null=null;
@@ -380,6 +390,15 @@ export default function App(){
     } else if(lo.endsWith(" module")){
       const mname=lo.slice(0,-7).trim();
       onClick=()=>{setGPopover(null);openModByName(mname);};
+    } else if(lo.endsWith(" battlecard")){
+      const stem=lo.slice(0,-" battlecard".length).trim();
+      const comp=COMPS.find(c=>String(c.n||"").toLowerCase()===stem || c.id.toLowerCase()===stem);
+      if(comp) onClick=()=>{
+        setGPopover(null);
+        setTab(STAB_MAP.competitive);
+        setModal(comp);
+        save({...prog,[comp.id]:{...(prog[comp.id]||{}),visited:true,lastVisit:Date.now()}});
+      };
     }
     return(
       <React.Fragment key={i}>

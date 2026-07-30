@@ -4,6 +4,14 @@ A dated record of what has shipped. For what's coming next, see [ROADMAP.md](ROA
 
 ---
 
+## 30 July 2026 (glossary coverage)
+
+- **Glossary expanded** from **95 → 191 terms** (10 → 11 categories; **110 → 232** lookup keys).
+- New **Competitive landscape** category: glossary entry for every battlecard in `COMPS` (52), with short-form aliases (GHA, GitLab Duo, Argo CD, etc.).
+- Popover **seeAlso** deep-links: `"… battlecard"` opens the Competitive tab and that specific card (alongside existing tab / stage / module conventions).
+- Relay density: Delivery Graph, Relay AI agents (Pilot/Conductor/Prover/Medic), Control Plane, Edge Agent, Policy Engine, plus SDLC/FinOps/security jargon sellers hit in hub copy.
+- `check:glossary` now validates the `aliases`/`plurals` Records in `glossary.ts` and battlecard seeAlso stems (was a no-op against the old `add()` helper).
+
 ## 30 July 2026 (enablement practice tabs)
 
 - **Discovery Paths** — Browse / Path modes on the Discovery tab; one constraint-first path per SDLC stage with handoff to Land Planner.
