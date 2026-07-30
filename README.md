@@ -1,146 +1,179 @@
 # GTM Signal Hub
 
-An externally safe, interview-ready GTM enablement hub for **Relay** — a fictional full-SDLC platform (a Cursor + Atlassian + delivery-platform chimera). Built to show how an SDR/GTM thinker structures technical markets: SDLC → personas → accounts → alternatives → outbound plays → AI coaching.
+A sales enablement hub for the **Relay** GTM organisation. Relay is a fictional full-SDLC delivery platform — think AI-assisted coding, planning, and delivery tooling under one roof. The hub gives SDRs, AEs, and GTM teammates an interactive way to learn and practise on Relay modules, the software delivery lifecycle, buyer personas, account briefs, competitive positioning, discovery questions, outbound plays, and call analysis.
 
-> **Do not merge into `main`.** This branch replaces private enablement content with a fictional Relay demo. Merging it would overwrite the private hub. Prefer keeping PR #53 (or successors) **unmerged / closed without merge**, and share via a [clean public export](#export-to-a-clean-public-repo) instead.
->
-> **Data safety:** Tip-of-branch content is sanitised. Private employer/customer material was removed or rewritten. See [Methodology](#data-safety-boundary), `SANITISATION_LOG.md`, `INTERVIEW_HANDOFF.md`, and the in-app **Methodology** tab. **Do not** make the private repo public, and **do not** push this branch’s full git history (it still reaches private `main` ancestors).
+The AI coaching chat (powered by Anthropic Claude) lets users deep-dive on any topic via Socratic coaching — explain it, get challenged, and build confidence before a real customer conversation.
 
-## Purpose
+**Stack:** React 19 + Vite 6 + TypeScript. GTM content lives in `src/data/*`; a Node.js serverless function proxies the Claude API server-side. An optional RAG layer (Turso / libSQL + Voyage AI embeddings) gives the coaching chat whole-hub retrieval — it auto-enables when its keys are present and stays in basic mode otherwise.
 
-Demonstrate:
-- how to think about technical markets and the SDLC
-- how to map accounts, personas, use cases, pain points, and outbound plays
-- how AI-assisted workflows improve SDR quality (coaching + call analysis + optional RAG)
-- how messy GTM knowledge becomes a structured system
-- judgment around data safety and confidentiality
+> **New to the project?** Read this file to run it, [`ROADMAP.md`](ROADMAP.md) for where it's going, [`CHANGELOG.md`](CHANGELOG.md) for what's shipped, and [`docs/DEV_SETUP.md`](docs/DEV_SETUP.md) for how changes get made. [`CLAUDE.md`](CLAUDE.md) is the context file that steers Claude Code / Cursor agents.
 
-## Tech stack
+---
 
-- React 19 + Vite 6 + TypeScript
-- Content in `src/data/*` (bundled client-side)
-- `POST /api/chat` via Vite middleware (dev) / `api/chat.ts` (serverless)
-- Optional whole-hub RAG: Turso/libSQL + Voyage AI embeddings (`npm run seed`)
+## Smarter coaching: whole-hub retrieval (RAG)
 
-## Setup
+The AI coach runs in two modes, decided purely by which keys are in your `.env.local`:
+
+- **Basic** (`ANTHROPIC_API_KEY` only) — the coach sees the card you have open. Solid single-card coaching.
+- **Whole-hub** (add the Turso + Voyage keys) — every message runs a **hybrid semantic + keyword search across the entire knowledge base** and feeds the most relevant cards into the coach's context, so you get cross-domain, grounded coaching rather than the model's best guess.
+
+It's built on **Turso / libSQL** with **Voyage AI** embeddings and SQLite FTS5, behind the Node.js API proxy. **The retrieval layer is additive and fails open:** if the database or embeddings API is unavailable — or you simply haven't added the keys — the chat runs in basic mode with no error. The same database is the foundation for planned **multi-user state** (progress, bookmarks, call history, settings) and a future auth layer.
+
+To switch on whole-hub coaching, see [Optional: enable RAG coaching](#optional-enable-rag-coaching) below.
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18 or later
+- An Anthropic API key — get one free at [console.anthropic.com](https://console.anthropic.com/api-keys)
+
+### Setup
 
 ```bash
+# 1. Clone the repo
 git clone https://github.com/BearGare/gtm-signal-hub.git
 cd gtm-signal-hub
+
+# 2. Install dependencies
 npm install
+
+# 3. Add your API key
 cp .env.local.example .env.local
-# Fill ANTHROPIC_API_KEY (required for coaching / call analysis)
-# Fill TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, VOYAGE_API_KEY for RAG
+# Open .env.local and replace sk-ant-... with your actual key
+
+# 4. Start the dev server
 npm run dev
 ```
 
-Open http://localhost:5173
+Open [http://localhost:5173](http://localhost:5173).
 
-> **Public repo:** [github.com/BearGare/gtm-signal-hub](https://github.com/BearGare/gtm-signal-hub) — clean orphan history only (no private hub ancestors).
+---
 
-### RAG (recommended for the full demo)
+## Optional: enable RAG coaching
 
-```bash
-npm run seed        # embed sanitised content into your demo Turso DB
-npm run seed:dry    # inspect content_text without writing
+The base app runs on `ANTHROPIC_API_KEY` alone. To turn on whole-hub retrieval coaching, add three more keys and seed the database — the app auto-detects them, and silently stays in basic mode if they're absent.
+
+**1. Add to `.env.local`:**
+
+```
+TURSO_DATABASE_URL=...
+TURSO_AUTH_TOKEN=...
+VOYAGE_API_KEY=...
 ```
 
-Use a **dedicated demo database** — never point this branch at a private enablement DB.
+**2. Seed the knowledge base:**
 
-## Core pages
+```bash
+npm run seed
+```
 
-| Tab | What it shows |
+Inspect what would be embedded without writing:
+
+```bash
+npm run seed:dry
+```
+
+**3. Run it:**
+
+```bash
+npm run dev
+```
+
+The coach now retrieves across the whole hub. Remove the keys and it falls back to basic mode automatically.
+
+---
+
+## What you can explore
+
+| Tab | What it covers |
 |---|---|
-| Dashboard | Coverage stats + demo path CTAs |
+| Dashboard | Coverage overview + suggested path through the hub |
 | Solutions | Relay modules across the SDLC + Chimera AI |
-| SDLC | Thin inner (Plan/Code) vs outer (Build→Optimise) map |
+| SDLC | Thin inner loop (Plan / Code) vs outer loop (Build → Optimise) |
 | Personas | Technical buyer enablement cards |
 | Accounts | Public-source account briefs (hypotheses labelled) |
-| Competitive | Public-research landscape, Relay-framed |
-| Outbound | Messaging lab (templates + optional AI polish) |
+| Competitive | Landscape cards framed for Relay |
+| Outbound | Messaging lab — templates + optional AI polish |
 | Discovery | Question banks with rationale |
 | Glossary | Industry + Relay terms with auto-link |
-| Calls | Paste transcript → structured analysis |
-| Methodology | Data-safety boundary |
+| Calls | Paste a transcript → structured analysis |
+| Methodology | How account research and hypotheses are handled |
 | Progress / Settings | Practice tiers + preferences |
 
-## Demo flow
+---
 
-See [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) for a 3-minute walkthrough aimed at a GTM/SDR leader.
+## Security architecture
 
-## Data safety boundary
+The API key is **never exposed to the browser or bundled into client-side JavaScript.**
 
-- Private/internal case studies, CRM/Gong-derived notes, and employer competitive IP were removed or recreated
-- Real companies may appear **only** with public-source observations
-- Hypotheses are labelled as hypotheses
-- This app demonstrates **workflow and judgment**, not privileged market intelligence
-- Secrets live in `.env.local` (gitignored) — never commit keys
+```
+Browser  →  POST /api/chat  →  Vite middleware (dev) / Node.js serverless (prod)
+                                        ↓
+                               Anthropic API (key injected server-side)
+                                        ↓
+                               Response forwarded to browser
+```
+
+- In **local development**, `vite.config.ts` runs a server-side middleware that reads `ANTHROPIC_API_KEY` from `.env.local` and injects it into the outgoing request. The browser only ever talks to `localhost:5173`.
+- In **production** (e.g. Vercel), `api/chat.ts` is a Node.js serverless function. The key is stored as an environment variable — it lives on the server and never reaches the client bundle.
+- `.env.local` is gitignored. The key never touches version control.
+- The variable has no `VITE_` prefix, which prevents Vite from bundling it into client-side code even if referenced accidentally.
+- The optional RAG keys (`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `VOYAGE_API_KEY`) follow the same rules — no `VITE_` prefix, read server-side only, never bundled into the client.
+
+**The AI provider is Anthropic (Claude) only.** The request format, system prompt structure, and response parsing are built around Anthropic's API.
+
+---
+
+## Project structure
+
+| Path | Purpose |
+|---|---|
+| `src/App.tsx` | UI components, state management, and chat logic |
+| `src/data/*` | All GTM content — modules, personas, accounts, battlecards, discovery, glossary, SDLC |
+| `src/types.ts` | TypeScript type definitions |
+| `src/colors.ts` | Brand colour palette constants |
+| `api/chat.ts` | Node.js serverless function — Anthropic API proxy + RAG pipeline |
+| `vite.config.ts` | Vite config + local dev middleware mirroring the API proxy |
+| `scripts/seed.ts` | Seeds the Turso database + FTS5 index with Voyage embeddings |
+| `scripts/check-glossary.ts` | Glossary integrity check (`npm run check:glossary`) |
+| `scripts/check-sensitive.ts` | Content hygiene gate (`npm run check:sensitive`) |
+| `.env.local` | Your API keys (local only, never committed) |
+| `.env.local.example` | Template — copy this to `.env.local` to get started |
+| `CLAUDE.md` | Context and instructions for Claude Code / Cursor |
+| `ROADMAP.md` | Product direction and backlog |
+| `CHANGELOG.md` | Dated record of what has shipped |
+| `docs/DEV_SETUP.md` | Development environment notes |
+
+---
+
+## Content updates
+
+All GTM content lives in `src/data/*` as TypeScript data modules. The workflow:
+
+1. Edit the relevant file under `src/data/` (modules, personas, accounts, comps, etc.)
+2. Run `npm run check:glossary` and `npm run check:sensitive` when content changes
+3. Commit on a feature branch → PR → merge to `main`
+
+Account briefs use **public sources only**. Hypotheses must stay labelled as hypotheses. Call Analysis should use synthetic or properly consented transcripts.
+
+---
 
 ## Checks
 
 ```bash
 npm run check:glossary
-npm run check:sensitive   # blocks known private/employer markers in runtime+docs
+npm run check:sensitive
 npm run build
 ```
 
-## Interview handoff
+---
 
-Short runbook (commands + 3-minute demo path): [`INTERVIEW_HANDOFF.md`](INTERVIEW_HANDOFF.md). Human spot-checks: [`HUMAN_REVIEW.md`](HUMAN_REVIEW.md). Demo narration: [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
+## Contributing
 
-## Export to a clean public repo
-
-This branch’s **working tree** is interview-safe; its **git history is not**. Ancestor commits still contain the private hub. To show or fork publicly:
-
-1. Confirm tip gates: `npm run check:sensitive && npm run check:glossary && npm run build`
-2. Confirm no secrets at tip: only `.env.local.example` (placeholders) is tracked; never commit `.env.local`
-3. Create an **orphan** history from the sanitised tip (squash — no private ancestors):
-
-```bash
-git checkout cursor/external-demo-hub-f483   # or the share-ready tip
-git checkout --orphan public-gtm-signal-hub
-git add -A
-git status   # confirm no .env.local / secrets
-git commit -m "Initial public release: GTM Signal Hub (Relay demo)"
-```
-
-4. Create a **new empty** public GitHub repo named `gtm-signal-hub` (do not fork the private hub).
-5. Push only the orphan branch:
-
-```bash
-git remote add public https://github.com/BearGare/gtm-signal-hub.git
-git push -u public public-gtm-signal-hub:main
-```
-
-6. Optional: tag `v0.1.0-demo`, add Topics, link `DEMO_SCRIPT.md` / `INTERVIEW_HANDOFF.md` in the public README.
-
-**Never:** merge the private demo branch into private `main`, push private-hub history onto the public remote, or flip the private repo to public.
-
-If you are already on [github.com/BearGare/gtm-signal-hub](https://github.com/BearGare/gtm-signal-hub), this export has been done — clone that repo directly (see Setup).
-
-## Secrets posture
-
-Audited on the demo tip / reachable `.env*` paths:
-
-| Check | Result |
-|---|---|
-| Tracked `.env*` | Only `.env.local.example` (placeholder values) |
-| `.env` / `.env.local` ever committed | No |
-| Real `sk-ant-api…` / live tokens in tip | No |
-| `.gitignore` covers `.env`, `.env.local`, `.env*.local`, `.env.*` | Yes |
-
-Rotate any key that ever lived in a cloud agent env if that env was shared beyond you.
-
-## Limitations
-
-- No auth / multi-user persistence yet
-- Outbound Lab is template-first; AI polish needs an API key
-- Competitive cards are public-research framed for a fictional platform — spot-check before public sharing
-- Call Analysis must use synthetic or properly consented transcripts only
-- Full git history on this branch is **not** share-safe (use orphan export above)
-
-## Future improvements
-
-- Deeper account signal sourcing with cited URLs
-- Dual-write progress to Turso
-- Export outbound packs to clipboard/Notion
+1. Clone the repo
+2. Create `.env.local` from `.env.local.example` with your own Anthropic key
+3. Branch from `main` using a descriptive name (`feat/`, `fix/`, `docs/`, `content/`)
+4. PR into `main` — never push directly

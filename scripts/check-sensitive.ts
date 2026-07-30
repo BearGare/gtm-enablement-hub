@@ -1,6 +1,6 @@
 /**
- * Scans source content for private/employer markers that must not ship
- * in the external demo. Exit 1 on any HIGH hit.
+ * Scans product source + root docs for markers that must not ship in the hub.
+ * Exit 1 on any HIGH hit.
  *
  * Run: npm run check:sensitive
  */
@@ -10,13 +10,11 @@ import { join } from 'path'
 const ROOT = join(process.cwd(), 'src')
 const EXTRA = [
   'README.md',
-  'DEMO_SCRIPT.md',
-  'INTERVIEW_HANDOFF.md',
-  'HUMAN_REVIEW.md',
   'AGENTS.md',
   'CLAUDE.md',
-  'SANITISATION_LOG.md',
   'CHANGELOG.md',
+  'ROADMAP.md',
+  'docs/DEV_SETUP.md',
   'index.html',
   'package.json',
 ]
@@ -39,9 +37,7 @@ const HIGH: { name: string; re: RegExp }[] = [
   { name: 'old localStorage prefix', re: /\bhHub/ },
 ]
 
-const ALLOW_FILES = new Set([
-  'SANITISATION_LOG.md', // documents what was removed — may cite private markers
-])
+const ALLOW_FILES = new Set<string>([])
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {

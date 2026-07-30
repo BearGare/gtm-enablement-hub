@@ -1,12 +1,13 @@
-# Changelog — GTM Signal Hub (demo branch)
+# Changelog
 
-## 2026-07 — External demo sanitisation
-- Rebranded to **GTM Signal Hub** / fictional platform **Relay**
-- Replaced content model: Solutions, 7-stage SDLC, personas, public accounts, Relay-framed competitive cards, discovery, glossary
-- Added Dashboard, Outbound Lab, Methodology
-- Removed private proofs / employer-bound enablement copy
-- Added `npm run check:sensitive`
-- Seed/RAG path updated for Relay collections
-- Share-readiness: README no-merge + orphan public-export steps, `INTERVIEW_HANDOFF.md`, GitHub Actions CI (sensitive / glossary / build)
+A dated record of what has shipped. For what's coming next, see [ROADMAP.md](ROADMAP.md).
 
-Private-hub changelog detail remains on `main` and is not reproduced here.
+---
+
+## 30 July 2026
+
+- **Public standalone release of GTM Signal Hub** — React 19 + Vite 6 + TypeScript enablement hub for the fictional Relay GTM org.
+- **Core tabs:** Dashboard, Solutions, SDLC, Personas, Accounts, Competitive, Outbound Lab, Discovery, Glossary, Calls, Methodology, Progress, Settings.
+- **AI coaching + call analysis** via Anthropic Claude through a server-side proxy (`api/chat.ts` / Vite middleware); optional whole-hub RAG with Turso / libSQL + Voyage embeddings (`npm run seed`).
+- **Content model:** Relay modules and Chimera AI, 7-stage SDLC map, public-source account briefs with labelled hypotheses, competitive landscape, discovery banks, glossary auto-link.
+- **Gates:** `npm run check:glossary`, `npm run check:sensitive`, `npm run build` (CI on push/PR).

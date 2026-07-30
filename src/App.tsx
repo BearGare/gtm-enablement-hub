@@ -1093,15 +1093,15 @@ ${obOutput.call}`;
                 </div>
               ))}
             </div>
-            {/* How to demo */}
+            {/* Suggested path */}
             <div style={{background:A+"09",border:`1px solid ${A}22`,borderRadius:10,padding:"16px 18px",marginBottom:16}}>
-              <div style={{fontWeight:700,fontSize:13,color:A,marginBottom:10}}>📋 How to demo this tool — 4 steps</div>
+              <div style={{fontWeight:700,fontSize:13,color:A,marginBottom:10}}>📋 Suggested path — 4 steps</div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {[
-                  {n:"1",t:"Start with the SDLC map","d":"Show the inner/outer loop thesis. Explain where AI coding acceleration creates the outer-loop bottleneck."},
-                  {n:"2",t:"Open an account brief","d":"Pick Stripe, Shopify, or Cloudflare. Walk through public signals vs hypotheses — show how GTM uses public intel responsibly."},
-                  {n:"3",t:"Generate outbound in the Lab","d":"Outbound tab → pick account, persona, SDLC stage, tone → Generate Openers. Show AI Coach Notes (optional: Polish with AI)."},
-                  {n:"4",t:"Paste the sample transcript","d":"Calls tab → Load sample transcript → Analyse Call. Show fit rating, pain points, and module alignment."},
+                  {n:"1",t:"Start with the SDLC map","d":"Walk the inner/outer loop. See where AI coding acceleration creates the outer-loop bottleneck — and where Relay fits."},
+                  {n:"2",t:"Open an account brief","d":"Pick Stripe, Shopify, or Cloudflare. Separate public signals from labelled hypotheses before you build a play."},
+                  {n:"3",t:"Generate outbound in the Lab","d":"Outbound tab → pick account, persona, SDLC stage, tone → Generate Openers. Review AI Coach Notes (optional: Polish with AI)."},
+                  {n:"4",t:"Practise on a call transcript","d":"Calls tab → Load sample transcript → Analyse Call. Review fit rating, pain points, and module alignment."},
                 ].map((step,i)=>(
                   <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                     <div style={{width:22,height:22,borderRadius:99,background:A,color:BG,fontWeight:700,fontSize:11,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>{step.n}</div>
@@ -1871,14 +1871,14 @@ ${obOutput.call}`;
         {/* ── tab 10: Methodology ───────────────────────────────────────── */}
         {tab===10&&(
           <div>
-            <Hdr title="About This Demo" accent="Demo" sub="Transparency note — what this tool is, how it was built, and how to use it responsibly."/>
+            <Hdr title="Research standards" accent="Methodology" sub="How this hub treats account research, hypotheses, and AI-assisted coaching."/>
             <div style={{display:"flex",flexDirection:"column",gap:14}}>
               {[
-                {icon:"🔒",title:"Externally safe demo",c:SU,body:`This is the GTM Signal Hub external demo build. All content has been sanitised — no real customer names, no unpublished pipeline data, no proprietary win/loss analysis, no internal financial metrics.\n\nThe platform shown is Relay — a fictional full-SDLC delivery platform created for demonstration purposes.`},
-                {icon:"📡",title:"Public sources only for account briefs",c:A,body:`Account briefs (Stripe, Shopify, Datadog, etc.) are built exclusively from publicly available information: careers pages, engineering blogs, public product documentation, and public marketing materials.\n\nNo account brief implies a customer relationship, a live evaluation, or privileged knowledge. These companies have not endorsed this tool.`},
+                {icon:"🧩",title:"Relay is the product under study",c:SU,body:`GTM Signal Hub is the enablement system for Relay — a fictional full-SDLC delivery platform spanning planning, AI-assisted coding, and delivery.\n\nEverything in the hub is framed for Relay GTM: modules, personas, competitive landscape, discovery, and outbound plays.`},
+                {icon:"📡",title:"Public sources only for account briefs",c:A,body:`Account briefs (Stripe, Shopify, Datadog, etc.) are built exclusively from publicly available information: careers pages, engineering blogs, public product documentation, and public marketing materials.\n\nNo account brief implies a customer relationship, a live evaluation, or insider knowledge. These companies have not endorsed this tool.`},
                 {icon:"💡",title:"Hypotheses are labelled — not facts",c:WA,body:`Every hypothesis in an account brief is explicitly labelled "Hypothesis" and is intended as a starting point for discovery, not a factual assertion. The rep's job is to validate or invalidate these hypotheses through open-ended discovery questions — not to present them as research.\n\nStrong reps show curiosity. Weak reps pretend to know.`},
                 {icon:"🤖",title:"AI-powered coaching and analysis",c:TL,body:`The coaching chat, call analysis, and outbound polish features use Claude (Anthropic) via a secure server-side proxy. No API key is exposed to the browser. All AI outputs should be reviewed before use — the system will occasionally be wrong, especially on specifics.\n\nCall analysis is for learning and qualification framing — not for sharing with prospects.`},
-                {icon:"⚒️",title:"Built with Cursor",c:MU,body:`This tool was built using Cursor (AI-assisted development). The codebase is a single-page React + TypeScript app (Vite) with a Node.js serverless API proxy.\n\nFor technical details, see README.md. For sanitisation history, see SANITISATION_LOG.md if present in the repo.`},
+                {icon:"⚒️",title:"How the hub is built",c:MU,body:`Single-page React + TypeScript (Vite) with a Node.js serverless API proxy for coaching and call analysis. Optional whole-hub RAG via Turso / libSQL and Voyage embeddings.\n\nFor setup and architecture, see README.md.`},
               ].map(({icon,title,c,body},i)=>(
                 <div key={i} style={{background:CD,border:`1px solid ${c}33`,borderRadius:10,padding:"18px 20px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
