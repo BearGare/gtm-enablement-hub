@@ -2,9 +2,9 @@
 
 Audience: GTM / SDR leadership at a developer-tools or AI company.
 
-## Why I built it
+## Why this hub exists
 
-I wanted a working system that forces the same discipline I use on accounts: map the SDLC, pick the persona, separate public signal from hypothesis, then earn the right to an outbound angle — with AI as a coach, not a content spitballer.
+A working system that forces the same discipline used on accounts: map the SDLC, pick the persona, separate public signal from hypothesis, then earn the right to an outbound angle — with AI as a coach, not a content spitballer.
 
 ## Tab map (exact labels)
 
@@ -29,19 +29,13 @@ Explicitly say: “I will not invent private knowledge in a live account.”
 **Outbound** (page title: Outbound Lab) → select that account + **VP Engineering** + **Deploy** (or **Code**) + tone.  
 Click **Generate Openers** → email / LinkedIn / call openers + **AI Coach Notes** (assumption, supporting public signal, what to avoid, how to validate).  
 Optional: **Polish with AI** (needs `ANTHROPIC_API_KEY`).  
-Optional: open **Competitive** → **⭐ Top** for 15s to show public-safe depth, Relay-framed.
+Optional: open **Competitive** → **⭐ Top** for 15s to show landscape depth, Relay-framed.
 
 ### 2:50–3:10 — Methodology
-Open **Methodology**. State the boundary: sanitised demo, public vs hypothesis, built with Cursor, not a dump of privileged intel.
+Open **Methodology**. State the boundary: public vs hypothesis, Relay is fictional, AI outputs need review.
 
 ### Optional (+1 min)
 **Calls** → **Load sample transcript** → **Analyse Call**. Show structured fit without claiming a fake preferred land motion.
 
-## What Cursor helped with
-Scaffolding the SPA, RAG plumbing, content refactor into a Relay data model, sensitive-term gating, and rapid UI iteration on tabs/workflows.
-
-## What I learned
-Enablement value is in **structure and judgment**, not in hoarding private anecdotes. Separating public observation from hypothesis makes coaching and outbound safer and sharper.
-
 ## What I’d improve next
-Richer cited public sources per account, outbound pack export, dual-write progress to Turso, and a clean public repo history separated from the private hub.
+Richer cited public sources per account, outbound pack export, and dual-write progress to Turso.

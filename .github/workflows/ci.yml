@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - cursor/external-demo-hub-f483
       - 'beargare/**'
       - 'cursor/**'
   pull_request:
