@@ -1,4 +1,4 @@
-# Dev setup — GTM Signal Hub
+# Dev setup — GTM Enablement Hub
 
 ```bash
 npm install
@@ -15,7 +15,7 @@ Canonical product names: [`docs/NAMING.md`](NAMING.md).
 | Area | Path |
 |---|---|
 | GTM content | `src/data/*` |
-| UI / chat / outbound / calls | `src/App.tsx` |
+| UI / chat / calls | `src/App.tsx` |
 | API + RAG | `api/chat.ts`, `vite.config.ts` |
 | Seed embeddings | `scripts/seed.ts` |
 

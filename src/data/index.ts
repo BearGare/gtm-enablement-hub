@@ -3,7 +3,6 @@ export { ARCH } from "./arch";
 export { PERSONAS } from "./personas";
 export { COMPS } from "./comps";
 export { DISC } from "./discovery";
-export { ACCOUNTS } from "./accounts";
 export { RELAY_AI } from "./relayAi";
 export { SDLC_STAGES, SDLC_INTRO } from "./sdlc";
 export { GLOSSARY, GLOSSARY_LOOKUP } from "./glossary";

@@ -1,4 +1,4 @@
-/** Discovery question groups for Relay GTM Signal Hub. */
+/** Discovery question groups for Relay GTM Enablement Hub. */
 export const DISC: { title: string; qs: { q: string; why: string; fu: string }[] }[] = [
 
   {title:"🚀 Deployment & reliability",qs:[

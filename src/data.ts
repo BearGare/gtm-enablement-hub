@@ -1,2 +1,2 @@
-/** Barrel — all GTM Signal Hub content. */
+/** Barrel — all GTM Enablement Hub content. */
 export * from "./data/index";

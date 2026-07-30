@@ -1,4 +1,4 @@
-// GTM Signal Hub palette — developer-tools dark console
+// GTM Enablement Hub palette — developer-tools dark console
 export const A  = "#00E3FE"; // Primary cyan (accent, active UI)
 export const TL = "#00C8A7"; // Teal (positive / FinOps)
 export const BG = "#07101E"; // Page background

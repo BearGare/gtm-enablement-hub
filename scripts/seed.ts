@@ -1,6 +1,6 @@
 /**
  * Turso seeding script — populates content_items with embeddings
- * from GTM Signal Hub data exports, then creates user state tables.
+ * from GTM Enablement Hub data exports, then creates user state tables.
  *
  * Run:  npm run seed          (full seed)
  *       npm run seed:dry      (inspect content_text without writing)
@@ -8,8 +8,8 @@
 
 import { readFileSync } from 'fs'
 import { createClient } from '@libsql/client'
-import { MODS, ARCH, PERSONAS, COMPS, ACCOUNTS, RELAY_AI, SDLC_STAGES, DISC } from '../src/data.ts'
-import type { Item, Account } from '../src/types.ts'
+import { MODS, ARCH, PERSONAS, COMPS, RELAY_AI, SDLC_STAGES, DISC } from '../src/data.ts'
+import type { Item } from '../src/types.ts'
 
 const DRY_RUN = process.argv.includes('--dry-run')
 
@@ -28,7 +28,7 @@ if (!process.env.TURSO_DATABASE_URL) {
   } catch { /* ignore */ }
 }
 
-type ContentType = 'module' | 'arch' | 'persona' | 'competitor' | 'account' | 'relay_ai' | 'sdlc' | 'disc_group'
+type ContentType = 'module' | 'arch' | 'persona' | 'competitor' | 'relay_ai' | 'sdlc' | 'disc_group'
 
 interface SeedItem {
   id: string
@@ -114,34 +114,6 @@ function buildAllItems(): SeedItem[] {
       short_desc: c.str ?? '',
       content_text: str(c.n, c.str, c.adv, c.wo, c.sa, c.d, joinSections(c.sections)),
       metadata_json: buildMeta(c, 'competitor'),
-    })
-  }
-
-  for (const a of ACCOUNTS as Account[]) {
-    items.push({
-      id: a.id,
-      content_type: 'account',
-      title: a.title,
-      short_desc: a.short ?? '',
-      content_text: str(
-        a.title,
-        a.industry,
-        a.publicSnapshot,
-        ...(a.publicSignals || []).map(s => `[public] ${s.text}`),
-        ...(a.hypotheses || []).map(s => `[hypothesis] ${s.text}`),
-        ...(a.pains || []),
-        ...(a.outboundAngles || []),
-        a.nextAction,
-        joinSections(a.sections),
-      ),
-      metadata_json: JSON.stringify({
-        id: a.id,
-        title: a.title,
-        industry: a.industry,
-        personas: a.personas,
-        moduleFit: a.moduleFit,
-        content_type: 'account',
-      }),
     })
   }
 

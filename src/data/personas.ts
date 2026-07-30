@@ -1,7 +1,7 @@
 import { A, TL, WA, ER, MU } from "../colors";
 import type { Item } from "../types";
 
-/** Persona enablement cards for Relay GTM Signal Hub. */
+/** Persona enablement cards for Relay GTM Enablement Hub. */
 export const PERSONAS: Item[] = [
 
   {id:"cto",e:"🏛️",c:A,title:"CTO",role:"Strategic Economic Buyer",
