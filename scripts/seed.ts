@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'fs'
 import { createClient } from '@libsql/client'
-import { MODS, ARCH, PERSONAS, COMPS, RELAY_AI, SDLC_STAGES, DISC } from '../src/data.ts'
+import { MODS, ARCH, PERSONAS, COMPS, RELAY_AI, SDLC_STAGES, DISC, DISCOVERY_PATHS, OBJECTIONS } from '../src/data.ts'
 import type { Item } from '../src/types.ts'
 
 const DRY_RUN = process.argv.includes('--dry-run')
@@ -28,7 +28,7 @@ if (!process.env.TURSO_DATABASE_URL) {
   } catch { /* ignore */ }
 }
 
-type ContentType = 'module' | 'arch' | 'persona' | 'competitor' | 'relay_ai' | 'sdlc' | 'disc_group'
+type ContentType = 'module' | 'arch' | 'persona' | 'competitor' | 'relay_ai' | 'sdlc' | 'disc_group' | 'discovery_path' | 'objection'
 
 interface SeedItem {
   id: string
@@ -151,6 +151,29 @@ function buildAllItems(): SeedItem[] {
       short_desc: '',
       content_text: str(group.title, questionsText),
       metadata_json: JSON.stringify({ id, title: group.title, content_type: 'disc_group', qs: group.qs }),
+    })
+  }
+
+  for (const path of DISCOVERY_PATHS) {
+    const stepsText = path.steps.map((s, i) => `Step ${i + 1}: ${s.prompt} | Why: ${s.why} | Next: ${s.hintNext}`).join(' || ')
+    items.push({
+      id: `path-${path.stageId}`,
+      content_type: 'discovery_path',
+      title: path.title,
+      short_desc: `Constraint-first path for ${path.stageId}`,
+      content_text: str(path.title, path.stageId, stepsText),
+      metadata_json: JSON.stringify({ id: `path-${path.stageId}`, stageId: path.stageId, content_type: 'discovery_path' }),
+    })
+  }
+
+  for (const o of OBJECTIONS) {
+    items.push({
+      id: o.id,
+      content_type: 'objection',
+      title: o.title,
+      short_desc: o.theme,
+      content_text: str(o.title, o.theme, o.trap, o.strongAnswer, o.coachTips, ...(o.personaIds || []), ...(o.moduleIds || [])),
+      metadata_json: JSON.stringify({ id: o.id, theme: o.theme, personaIds: o.personaIds, moduleIds: o.moduleIds, content_type: 'objection' }),
     })
   }
 

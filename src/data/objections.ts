@@ -17,9 +17,9 @@ export const OBJECTIONS: ObjectionCard[] = [
       "Ask Duo add-on spend and renewal date early. Coexist on SCM/CI first; land where GitLab is thin (CD verification, Cost, Portal). Never trash Duo's MR strengths — reframe the surface: pre-merge assist vs post-merge ship safety.",
   },
   {
-    id: "like-harness",
+    id: "like-cd-platform",
     e: "🎯",
-    title: "So you're like Harness — another CD / platform vendor?",
+    title: "So you're just another CD / DevOps platform vendor?",
     theme: "category_reframe",
     personaIds: ["vpe", "platform", "devops"],
     moduleIds: ["cd", "ci", "test", "flags", "cost", "insights"],
@@ -27,7 +27,7 @@ export const OBJECTIONS: ObjectionCard[] = [
     strongAnswer:
       "If the pain is release safety and pipeline toil, we're in the same conversation — and that's fine. Relay's story is the full plan-to-prod value stream on one Delivery Graph: CI and Test that absorb AI-era merge volume, CD with release verification and progressive delivery, Flags, Cost, and Insights so execs see whether faster coding became safer shipping. Start with the constraint you feel today; expand modules when the graph proves useful — not a big-bang platform swap.",
     coachTips:
-      "Name their constraint first (rollback heroics, flake burden, idle spend). Coexistence on greenfield services beats displacement talk. Stay on Relay module names only — never borrow Harness product labels.",
+      "Name their constraint first (rollback heroics, flake burden, idle spend). Coexistence on greenfield services beats displacement talk. Stay on Relay module names only — never borrow a competitor's product labels.",
   },
   {
     id: "like-backstage",
